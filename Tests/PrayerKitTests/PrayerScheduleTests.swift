@@ -38,3 +38,13 @@ func makkahTime(_ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: In
     let times = try #require(makkah.times(on: date))
     #expect(times.date.day == 4)
 }
+
+@Test func nextPrayerIsLaterTheSameDay() {
+    #expect(makkah.next(after: makkahTime(2016, 2, 4, 13, 0))?.prayer == .asr)
+}
+
+@Test func nextPrayerAfterIshaIsTomorrowsFajr() throws {
+    let next = try #require(makkah.next(after: makkahTime(2016, 2, 4, 21, 0)))
+    #expect(next.prayer == .fajr)
+    #expect(next.time == makkah.times(on: makkahTime(2016, 2, 5, 12, 0))?.fajr)
+}

@@ -28,4 +28,18 @@ public struct PrayerSchedule {
             calculationParameters: parameters
         )
     }
+
+    /// The next time after `date`: one of the five prayers, or sunrise, which ends
+    /// Fajr's time. After Isha it is tomorrow's Fajr.
+    public func next(after date: Date) -> (prayer: Prayer, time: Date)? {
+        guard let today = times(on: date) else { return nil }
+        if let prayer = today.nextPrayer(at: date) {
+            return (prayer, today.time(for: prayer))
+        }
+        guard
+            let tomorrowDate = calendar.date(byAdding: .day, value: 1, to: date),
+            let tomorrow = times(on: tomorrowDate)
+        else { return nil }
+        return (.fajr, tomorrow.fajr)
+    }
 }
