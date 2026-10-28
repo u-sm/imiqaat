@@ -1,6 +1,6 @@
 <div align="center">
 
-# imiqaat
+# iMiqaat
 
 **Salah times on your Mac's Lock Screen.**
 
@@ -15,7 +15,7 @@
 ---
 
 > [!WARNING]
-> imiqaat is in early development and there is no release yet. Follow the [roadmap](docs/ROADMAP.md) to see what is being built.
+> iMiqaat is in early development and there is no release yet. Follow the [roadmap](docs/ROADMAP.md) to see what is being built.
 
 ## Features
 
@@ -30,10 +30,10 @@ Planned for v1.0:
 
 ## How it works
 
-macOS has no public API for drawing on the Lock Screen. imiqaat uses [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow), which places a window in a private WindowServer Space above the lock layer. Prayer times are calculated locally with [adhan-swift](https://github.com/batoulapps/adhan-swift).
+macOS has no public API for drawing on the Lock Screen. iMiqaat uses [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow), which places a window in a private WindowServer Space above the lock layer. Prayer times are calculated locally with [adhan-swift](https://github.com/batoulapps/adhan-swift).
 
 > [!IMPORTANT]
-> Because imiqaat relies on private macOS APIs:
+> Because iMiqaat relies on private macOS APIs:
 > - It cannot be distributed through the Mac App Store. It ships as a signed, notarized download.
 > - A macOS update could break the Lock Screen widget. If that happens, the menu-bar times keep working.
 
@@ -63,4 +63,4 @@ To report a security issue, follow [SECURITY.md](SECURITY.md) and do not open a 
 
 ## License
 
-imiqaat is released under the [MIT License](LICENSE).
+iMiqaat is released under the [MIT License](LICENSE).

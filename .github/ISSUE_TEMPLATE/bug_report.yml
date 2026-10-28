@@ -27,11 +27,11 @@ body:
     id: prayer-times
     attributes:
       label: Prayer times (if the times are wrong)
-      description: Your city, calculation method, Asr madhab and high-latitude rule, the times imiqaat shows, and the times you expected (with the source, such as your mosque's timetable).
+      description: Your city, calculation method, Asr madhab and high-latitude rule, the times iMiqaat shows, and the times you expected (with the source, such as your mosque's timetable).
   - type: input
     id: app-version
     attributes:
-      label: imiqaat version
+      label: iMiqaat version
       placeholder: "0.1.0"
     validations:
       required: true

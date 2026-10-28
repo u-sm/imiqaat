@@ -1,6 +1,6 @@
 # Roadmap
 
-imiqaat is a macOS menu-bar app that shows today's salah times on the Lock Screen.
+iMiqaat is a macOS menu-bar app that shows today's salah times on the Lock Screen.
 
 ## Scope of v1.0
 
@@ -43,7 +43,7 @@ Lock state comes from the distributed notifications `com.apple.screenIsLocked` a
 A single Xcode app target, plus one local Swift package so the maths can be tested with `swift test`:
 
 ```
-imiqaat/
+iMiqaat/
 ├── App/            menu bar, Lock Screen window, SwiftUI widget view
 └── PrayerKit/      Swift package: adhan-swift wrapper, location cache, tests
 ```

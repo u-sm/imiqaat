@@ -1,4 +1,4 @@
-# Contributing to imiqaat
+# Contributing to iMiqaat
 
 Thanks for helping. This guide explains how changes get into the project.
 
