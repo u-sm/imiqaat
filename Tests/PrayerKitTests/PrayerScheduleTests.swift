@@ -57,3 +57,27 @@ func makkahTime(_ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: In
 @Test func hijriDateAdvancesAtMaghrib() {
     #expect(makkah.hijriDate(at: makkahTime(2016, 2, 4, 19, 0)).day == 26)
 }
+
+// e-Solat's published timetable for zone WLY01 (Kuala Lumpur) on 29 October 2026. JAKIM's zone
+// reference point isn't published, so this uses the city centre and allows ±2 minutes.
+@Test func jakimMatchesPublishedESolatTimetable() throws {
+    let kualaLumpur = PrayerSchedule(
+        coordinates: Coordinates(latitude: 3.1390, longitude: 101.6869),
+        parameters: PrayerMethod.jakim.params,
+        timeZone: TimeZone(identifier: "Asia/Kuala_Lumpur")!
+    )
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = kualaLumpur.timeZone
+    func time(_ hour: Int, _ minute: Int) -> Date {
+        calendar.date(from: DateComponents(year: 2026, month: 10, day: 29, hour: hour, minute: minute))!
+    }
+    let times = try #require(kualaLumpur.times(on: time(12, 0)))
+    let published: [(Prayer, Int, Int)] = [
+        (.fajr, 5, 48), (.sunrise, 6, 56), (.dhuhr, 13, 0),
+        (.asr, 16, 19), (.maghrib, 18, 59), (.isha, 20, 9),
+    ]
+    for (prayer, hour, minute) in published {
+        let difference = abs(times.time(for: prayer).timeIntervalSince(time(hour, minute)))
+        #expect(difference <= 120, "\(prayer)")
+    }
+}
