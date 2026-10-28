@@ -9,13 +9,15 @@ import ServiceManagement
 final class StatusMenu: NSObject, NSMenuDelegate {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let location: Location
+    private let lockScreenAvailable: Bool
     private let settingsChanged: () -> Void
     private var timer: Timer?
     private var locationChanges: AnyCancellable?
 
     /// `settingsChanged` runs after the user picks a new setting.
-    init(location: Location, settingsChanged: @escaping () -> Void) {
+    init(location: Location, lockScreenAvailable: Bool, settingsChanged: @escaping () -> Void) {
         self.location = location
+        self.lockScreenAvailable = lockScreenAvailable
         self.settingsChanged = settingsChanged
         super.init()
         item.menu = NSMenu()
@@ -55,6 +57,11 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         let defaults = UserDefaults.standard
         menu.removeAllItems()
+        if !lockScreenAvailable {
+            // No action, so the item shows greyed out as a notice.
+            menu.addItem(withTitle: "Lock Screen widget unavailable on this macOS version", action: nil, keyEquivalent: "")
+            menu.addItem(.separator())
+        }
         menu.addItem(submenu("Calculation Method", CalculationMethod.allCases.filter { $0 != .other }.map { method in
             choice(method.title, isOn: defaults.calculationMethod == method) { defaults.calculationMethod = method }
         }))

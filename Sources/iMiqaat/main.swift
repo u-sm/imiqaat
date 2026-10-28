@@ -2,10 +2,8 @@ import AppKit
 import PrayerKit
 import SwiftUI
 
-guard let moveToLockScreen = makeLockScreenSpace() else {
-    print("SkyLight's private API is unavailable on this version of macOS.")
-    exit(1)
-}
+// Nil if a macOS update removed the private API; the app then runs from the menu bar only.
+let moveToLockScreen = makeLockScreenSpace()
 
 let app = NSApplication.shared
 app.setActivationPolicy(.accessory)
@@ -38,8 +36,10 @@ if let screen = NSScreen.main {
     window.setFrameOrigin(NSPoint(x: screen.frame.minX + 48, y: screen.frame.minY + 48))
 }
 
-moveToLockScreen(window)
-window.orderFrontRegardless()
+if let moveToLockScreen {
+    moveToLockScreen(window)
+    window.orderFrontRegardless()
+}
 
 // Hide with alpha rather than orderOut, so the window never leaves the Lock Screen Space.
 let session = CGSessionCopyCurrentDictionary() as? [String: Any]
@@ -53,6 +53,6 @@ for (name, alpha) in [("com.apple.screenIsLocked", 1.0), ("com.apple.screenIsUnl
     }
 }
 
-let statusMenu = StatusMenu(location: location) { cardView.rootView = card() }
+let statusMenu = StatusMenu(location: location, lockScreenAvailable: moveToLockScreen != nil) { cardView.rootView = card() }
 
 app.run()
