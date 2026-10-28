@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest an idea for imiqaat.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the [roadmap](https://github.com/u-sm/imiqaat/blob/main/docs/ROADMAP.md) and [existing issues](https://github.com/u-sm/imiqaat/issues) first. If someone has already asked, add a 👍 to their issue instead.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the need, not the solution. For example, "I pray at my local mosque and want to see its iqamah times."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered

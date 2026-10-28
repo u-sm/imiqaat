@@ -1,0 +1,59 @@
+name: Bug report
+description: Something isn't working as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please search [existing issues](https://github.com/u-sm/imiqaat/issues) first to avoid duplicates.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you saw, and what you expected to see instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Set the calculation method to …
+        2. Lock the screen …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: prayer-times
+    attributes:
+      label: Prayer times (if the times are wrong)
+      description: Your city, calculation method, Asr madhab and high-latitude rule, the times imiqaat shows, and the times you expected (with the source, such as your mosque's timetable).
+  - type: input
+    id: app-version
+    attributes:
+      label: imiqaat version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS version
+      description: From Apple menu > About This Mac.
+      placeholder: "macOS 27.0.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: chip
+    attributes:
+      label: Mac chip
+      options:
+        - Apple silicon
+        - Intel
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or logs
+      description: Drag images or log files here. Remove anything you don't want to share, such as your exact location.
