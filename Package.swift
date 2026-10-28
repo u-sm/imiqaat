@@ -11,11 +11,15 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "iMiqaat",
-            dependencies: ["PrayerKit", .product(name: "Adhan", package: "adhan-swift")]
+            dependencies: ["PrayerKit", "WidgetUI", .product(name: "Adhan", package: "adhan-swift")]
         ),
         .target(
             name: "PrayerKit",
             dependencies: [.product(name: "Adhan", package: "adhan-swift")]
+        ),
+        .target(
+            name: "WidgetUI",
+            dependencies: ["PrayerKit", .product(name: "Adhan", package: "adhan-swift")]
         ),
         .testTarget(
             name: "PrayerKitTests",

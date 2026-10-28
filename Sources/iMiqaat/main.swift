@@ -1,6 +1,7 @@
 import AppKit
 import PrayerKit
 import SwiftUI
+import WidgetUI
 
 // Nil if a macOS update removed the private API; the app then runs from the menu bar only.
 let moveToLockScreen = makeLockScreenSpace()
@@ -25,8 +26,8 @@ window.canBecomeVisibleWithoutLogin = true
 window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
 
 @MainActor
-func card() -> CardView {
-    CardView(location: location, parameters: UserDefaults.standard.calculationParameters)
+func card() -> LiveCardView {
+    LiveCardView(location: location, parameters: UserDefaults.standard.calculationParameters)
 }
 let cardView = NSHostingView(rootView: card())
 window.contentView = cardView

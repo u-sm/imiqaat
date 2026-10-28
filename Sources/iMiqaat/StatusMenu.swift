@@ -3,6 +3,7 @@ import AppKit
 import Combine
 import PrayerKit
 import ServiceManagement
+import WidgetUI
 
 /// The menu-bar item: the next prayer and its time, and a menu of calculation settings.
 @MainActor
