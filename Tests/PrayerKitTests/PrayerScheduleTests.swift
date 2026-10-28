@@ -48,3 +48,12 @@ func makkahTime(_ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: In
     #expect(next.prayer == .fajr)
     #expect(next.time == makkah.times(on: makkahTime(2016, 2, 5, 12, 0))?.fajr)
 }
+
+@Test func hijriDateMatchesPublishedCalendar() {
+    let hijri = makkah.hijriDate(at: makkahTime(2016, 2, 4, 12, 0))
+    #expect([hijri.year, hijri.month, hijri.day] == [1437, 4, 25])
+}
+
+@Test func hijriDateAdvancesAtMaghrib() {
+    #expect(makkah.hijriDate(at: makkahTime(2016, 2, 4, 19, 0)).day == 26)
+}

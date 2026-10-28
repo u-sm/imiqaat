@@ -42,4 +42,14 @@ public struct PrayerSchedule {
         else { return nil }
         return (.fajr, tomorrow.fajr)
     }
+
+    /// The Umm al-Qura Hijri date. The Islamic day begins at Maghrib, so from Maghrib
+    /// onwards this is the next day's date.
+    public func hijriDate(at date: Date) -> DateComponents {
+        var hijri = Calendar(identifier: .islamicUmmAlQura)
+        hijri.timeZone = timeZone
+        let afterMaghrib = times(on: date).map { date >= $0.maghrib } ?? false
+        let day = afterMaghrib ? hijri.date(byAdding: .day, value: 1, to: date) ?? date : date
+        return hijri.dateComponents([.year, .month, .day], from: day)
+    }
 }
