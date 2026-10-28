@@ -32,6 +32,18 @@ if let screen = NSScreen.main {
 moveToLockScreen(window)
 window.orderFrontRegardless()
 
+// Hide with alpha rather than orderOut, so the window never leaves the Lock Screen Space.
+let session = CGSessionCopyCurrentDictionary() as? [String: Any]
+window.alphaValue = session?["CGSSessionScreenIsLocked"] as? Bool == true ? 1 : 0
+
+for (name, alpha) in [("com.apple.screenIsLocked", 1.0), ("com.apple.screenIsUnlocked", 0.0)] {
+    DistributedNotificationCenter.default().addObserver(
+        forName: .init(name), object: nil, queue: .main
+    ) { _ in
+        MainActor.assumeIsolated { window.alphaValue = alpha }
+    }
+}
+
 app.run()
 
 struct SpikeView: View {
