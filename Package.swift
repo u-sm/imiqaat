@@ -21,6 +21,11 @@ let package = Package(
             name: "WidgetUI",
             dependencies: ["PrayerKit", .product(name: "Adhan", package: "adhan-swift")]
         ),
+        // Renders the screenshots: swift run Artwork screenshots <output dir>
+        .executableTarget(
+            name: "Artwork",
+            dependencies: ["PrayerKit", "WidgetUI", .product(name: "Adhan", package: "adhan-swift")]
+        ),
         .testTarget(
             name: "PrayerKitTests",
             dependencies: ["PrayerKit", .product(name: "Adhan", package: "adhan-swift")]

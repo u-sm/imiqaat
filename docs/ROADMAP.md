@@ -45,13 +45,15 @@ One Swift package, with no Xcode project. It builds with `swift build` using onl
 ```
 Package.swift
 Sources/
-├── iMiqaat/        app: menu bar, Lock Screen window, SwiftUI widget view
-└── PrayerKit/      adhan-swift wrapper, location cache (v0.2)
+├── iMiqaat/        app: menu bar, Lock Screen window
+├── PrayerKit/      adhan-swift wrapper, location cache (v0.2)
+├── WidgetUI/       the SwiftUI card, shared by the app and Artwork
+└── Artwork/        renders the project's images from the real views (#23)
 Tests/
 └── PrayerKitTests/ tested with `swift test` (v0.2)
 ```
 
-- The card view moves into a `WidgetUI` library when a second consumer arrives: the Artwork tool that renders the icon, DMG background and screenshots (#23), and later a WidgetKit widget (#51).
+- The card is drawn from plain values (`CardView(.times(schedule, now:))`), so Artwork can render it with fixed sample data, and a WidgetKit widget (#51) can reuse it later. The app wraps it in `LiveCardView`, which follows the location and the clock.
 - Location permission needs an `Info.plist`, which a bare executable doesn't have. The v0.2 location work adds a small script that wraps the executable in an `.app` bundle.
 - The Command Line Tools lack SwiftUI's macro plugin, so views can't use `@State` until the project requires Xcode. Keep view state in plain `ObservableObject` models.
 
