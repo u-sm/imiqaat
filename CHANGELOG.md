@@ -6,15 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-29
+
+The first pre-release.
+
 ### Added
 
-- Project documentation: README, roadmap, contributing guide, code of conduct and security policy.
-- Issue and pull request templates.
-- A placeholder widget on the Lock Screen, proving the private SkyLight overlay works. It appears only while the screen is locked.
-- PrayerKit: today's prayer times, the next prayer and the Hijri date for a location, calculated offline with adhan-swift.
-- The Mac's location, fetched once and cached so the app works offline. The Lock Screen card shows the next prayer, or explains how to allow location access.
-- `scripts/bundle.sh`, which builds the app as a signed `.app` bundle.
-- The Lock Screen widget: the next prayer with a countdown, the Hijri date, and today's six times with the next one highlighted. It updates every minute.
-- A menu-bar item showing the next prayer, with a menu to choose the calculation method, Asr method and high-latitude rule.
-- A Launch at Login option in the menu.
-- If a macOS update removes the private Lock Screen API, the app keeps working from the menu bar and says why the widget is missing.
+- A Lock Screen widget with the next prayer and a countdown, the Hijri date (Umm al-Qura, changing at Maghrib), and today's six times with the next one highlighted. It appears only while the screen is locked and updates every minute.
+- A menu-bar item with the next prayer, and a menu to choose the calculation method (12 methods), the Asr method and the high-latitude rule.
+- Times calculated offline with adhan-swift, from a location fetched once and kept on your Mac.
+- A Launch at Login option.
+- If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
+
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/u-sm/imiqaat/releases/tag/v0.1.0

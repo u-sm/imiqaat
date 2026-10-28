@@ -72,7 +72,9 @@ Each milestone is a GitHub milestone. Each line below is one pull request.
 ## Releases
 
 - Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md).
-- The Developer ID certificate and notarization key are stored in GitHub Secrets only, and are added at v1.0. Until then, contributors build with ad-hoc signing.
+- Pushing a tag runs `.github/workflows/release.yml`, which builds a universal DMG and publishes it as a GitHub Release. Pull requests that change the pipeline get a dry run that builds the DMG without publishing.
+- Until v1.0, releases are ad-hoc signed pre-releases: macOS asks users to approve the app in Privacy & Security the first time they open it.
+- The Developer ID certificate and notarization key will be stored in GitHub Secrets only, and are added at v1.0.
 
 ## Open decisions
 
