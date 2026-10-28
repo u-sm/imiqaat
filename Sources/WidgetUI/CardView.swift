@@ -2,38 +2,35 @@ import Adhan
 import PrayerKit
 import SwiftUI
 
-struct CardView: View {
-    @ObservedObject var location: Location
-    let parameters: CalculationParameters
+/// The Lock Screen card, drawn from plain values so the app and the Artwork tool share it.
+public struct CardView: View {
+    public enum Content {
+        case denied
+        case findingLocation
+        case times(PrayerSchedule, now: Date)
+    }
 
-    var body: some View {
+    let content: Content
+
+    public init(_ content: Content) {
+        self.content = content
+    }
+
+    public var body: some View {
         Group {
-            // A cached fix may be out of date, so don't show it once access is revoked.
-            if location.isDenied {
+            switch content {
+            case .denied:
                 Text("Allow Location for iMiqaat in System Settings › Privacy & Security.")
-            } else if let coordinates = location.coordinates {
-                // Recalculating from the current time every minute also covers midnight,
-                // sleep and wake, and time-zone changes.
-                TimelineView(.everyMinute) { context in
-                    PrayerTimesView(
-                        schedule: PrayerSchedule(
-                            coordinates: coordinates,
-                            parameters: parameters,
-                            timeZone: .autoupdatingCurrent
-                        ),
-                        now: context.date
-                    )
-                }
-            } else {
+            case .findingLocation:
                 Text("Finding your location…")
+            case let .times(schedule, now):
+                PrayerTimesView(schedule: schedule, now: now)
             }
         }
         .foregroundStyle(.white)
         .padding(20)
         .frame(width: 280, alignment: .leading)
         .background(.black.opacity(0.45), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-        // The window is taller than the card; keep the card in its bottom-left corner.
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }
 }
 
@@ -57,7 +54,8 @@ private struct PrayerTimesView: View {
                         HStack {
                             Text(prayer.name)
                             Spacer()
-                            Text(today.time(for: prayer).formatted(date: .omitted, time: .shortened))
+                            // In the schedule's time zone, which is the Mac's in the app.
+                            Text(today.time(for: prayer).formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))
                         }
                         .fontWeight(isNext ? .bold : .regular)
                         .foregroundStyle(isNext ? .primary : .secondary)
@@ -83,7 +81,7 @@ private struct PrayerTimesView: View {
 }
 
 extension Prayer {
-    var name: String {
+    public var name: String {
         "\(self)".capitalized
     }
 }
