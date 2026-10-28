@@ -2,6 +2,7 @@ import Adhan
 import AppKit
 import Combine
 import PrayerKit
+import ServiceManagement
 
 /// The menu-bar item: the next prayer and its time, and a menu of calculation settings.
 @MainActor
@@ -64,7 +65,25 @@ final class StatusMenu: NSObject, NSMenuDelegate {
             choice(rule?.title ?? "Automatic", isOn: defaults.highLatitudeRule == rule) { defaults.highLatitudeRule = rule }
         }))
         menu.addItem(.separator())
+        menu.addItem(ActionItem("Launch at Login", isOn: SMAppService.mainApp.status == .enabled) {
+            Self.toggleLaunchAtLogin()
+        })
+        menu.addItem(.separator())
         menu.addItem(withTitle: "Quit iMiqaat", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+    }
+
+    private static func toggleLaunchAtLogin() {
+        let service = SMAppService.mainApp
+        do {
+            try service.status == .enabled ? service.unregister() : service.register()
+        } catch {
+            NSApp.activate(ignoringOtherApps: true)
+            NSAlert(error: error).runModal()
+        }
+        // macOS can hold a new login item until the user approves it in System Settings.
+        if service.status == .requiresApproval {
+            SMAppService.openSystemSettingsLoginItems()
+        }
     }
 
     private func submenu(_ title: String, _ items: [NSMenuItem]) -> NSMenuItem {
