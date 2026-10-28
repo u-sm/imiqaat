@@ -11,3 +11,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Project documentation: README, roadmap, contributing guide, code of conduct and security policy.
 - Issue and pull request templates.
 - A placeholder widget on the Lock Screen, proving the private SkyLight overlay works. It appears only while the screen is locked.
+- PrayerKit: today's prayer times, the next prayer and the Hijri date for a location, calculated offline with adhan-swift.

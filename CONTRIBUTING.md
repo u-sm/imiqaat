@@ -73,7 +73,17 @@ iMiqaat is a Swift package with no Xcode project. You need Swift 6, from the Com
 ```sh
 swift build   # compile
 swift run     # build and launch; stop it with Ctrl-C
+swift test    # run the tests
 ```
+
+With only the Command Line Tools, `swift test` may fail with "plugin for module 'TestingMacros' not found". The plugin is installed but not loaded; pass it explicitly:
+
+```sh
+swift test -Xswiftc -load-plugin-library \
+  -Xswiftc /Library/Developer/CommandLineTools/usr/lib/swift/host/plugins/testing/libTestingMacros.dylib
+```
+
+Tests use [Swift Testing](https://developer.apple.com/documentation/testing) (`import Testing`), because the Command Line Tools don't include XCTest.
 
 To check a Lock Screen change, run the app, then lock the screen with **Control-Command-Q**.
 
