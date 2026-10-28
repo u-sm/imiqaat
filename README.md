@@ -4,6 +4,7 @@
 
 **Salah times on your Mac's Lock Screen.**
 
+[![CI](https://github.com/u-sm/imiqaat/actions/workflows/ci.yml/badge.svg)](https://github.com/u-sm/imiqaat/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey.svg)](#requirements)
 [![Swift 6](https://img.shields.io/badge/Swift-6-F05138.svg?logo=swift&logoColor=white)](https://swift.org)
