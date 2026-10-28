@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  # A dry run for changes to the release pipeline: build the DMG and attach it
+  # to the run, without publishing anything.
+  pull_request:
+    paths:
+      - .github/workflows/release.yml
+      - scripts/bundle.sh
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-26
+    env:
+      VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.0.0' }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build the app for Apple silicon and Intel
+        run: scripts/bundle.sh -c release --arch arm64 --arch x86_64
+
+      - name: Make the DMG
+        run: |
+          mkdir dmg
+          cp -R .build/iMiqaat.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname iMiqaat -srcfolder dmg -format UDZO "iMiqaat-${VERSION#v}.dmg"
+
+      - name: Attach the DMG to this run
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: iMiqaat-dmg
+          path: iMiqaat-*.dmg
+
+      - name: Publish the release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # This version's changelog section, without its heading.
+          awk -v v="${VERSION#v}" '$0 ~ "^## \\[" v "\\]" { on = 1; next } /^## \[/ { on = 0 } on' CHANGELOG.md > notes.md
+          cat >> notes.md <<'EOF'
+
+          ## Installing
+
+          This build is ad-hoc signed and not notarized by Apple, so macOS stops it the first time you open it:
+
+          1. Open the DMG and drag **iMiqaat** to **Applications**.
+          2. Open iMiqaat. When macOS says it can't verify the developer, click **Done**.
+          3. Open **System Settings › Privacy & Security**, scroll down and click **Open Anyway** next to iMiqaat.
+          EOF
+          # shortcut: every release is a pre-release until builds are notarized (v1.0).
+          gh release create "$VERSION" "iMiqaat-${VERSION#v}.dmg" \
+            --title "iMiqaat ${VERSION#v}" --notes-file notes.md --prerelease
