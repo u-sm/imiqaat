@@ -45,7 +45,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # This version's changelog section, without its heading.
-          awk -v v="${VERSION#v}" '$0 ~ "^## \\[" v "\\]" { on = 1; next } /^## \[/ { on = 0 } on' CHANGELOG.md > notes.md
+          # Also stop at a bare link-reference line like "[0.1.0]: https://...", which
+          # Keep a Changelog puts at the end of the file. GitHub hides those on the
+          # release page but plain-text readers (notification emails) do not.
+          awk -v v="${VERSION#v}" '$0 ~ "^## \\[" v "\\]" { on = 1; next } /^## \[/ || /^\[/ { on = 0 } on' CHANGELOG.md > notes.md
           cat >> notes.md <<'EOF'
 
           ## Installing
