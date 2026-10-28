@@ -15,3 +15,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The Mac's location, fetched once and cached so the app works offline. The Lock Screen card shows the next prayer, or explains how to allow location access.
 - `scripts/bundle.sh`, which builds the app as a signed `.app` bundle.
 - The Lock Screen widget: the next prayer with a countdown, the Hijri date, and today's six times with the next one highlighted. It updates every minute.
+- A menu-bar item showing the next prayer, with a menu to choose the calculation method, Asr method and high-latitude rule.
