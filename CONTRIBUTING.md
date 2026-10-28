@@ -72,9 +72,11 @@ iMiqaat is a Swift package with no Xcode project. You need Swift 6, from the Com
 
 ```sh
 swift build   # compile
-swift run     # build and launch; stop it with Ctrl-C
 swift test    # run the tests
+scripts/bundle.sh && open .build/iMiqaat.app   # build and launch the app
 ```
+
+Launch the app from its bundle, not with `swift run`: macOS asks for location permission only for an app with an `Info.plist`. `scripts/bundle.sh` builds, wraps the executable in `.build/iMiqaat.app` and signs it ad hoc; pass `-c release` for a release build. Quit the app with `pkill -x iMiqaat`.
 
 With only the Command Line Tools, `swift test` may fail with "plugin for module 'TestingMacros' not found". The plugin is installed but not loaded; pass it explicitly:
 

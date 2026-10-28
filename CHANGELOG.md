@@ -12,3 +12,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Issue and pull request templates.
 - A placeholder widget on the Lock Screen, proving the private SkyLight overlay works. It appears only while the screen is locked.
 - PrayerKit: today's prayer times, the next prayer and the Hijri date for a location, calculated offline with adhan-swift.
+- The Mac's location, fetched once and cached so the app works offline. The Lock Screen card shows the next prayer, or explains how to allow location access.
+- `scripts/bundle.sh`, which builds the app as a signed `.app` bundle.

@@ -26,7 +26,7 @@ Planned for v1.0:
 - 📅 **Today's times**: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha.
 - 🌙 **The Hijri date**, from the Umm al-Qura calendar.
 - 🧭 **Your choice of calculation method, Asr madhab and high-latitude rule.**
-- 📴 **Works offline.** Times are calculated on your Mac, and your location never leaves it.
+- 📴 **Works offline.** Times are calculated on your Mac, and iMiqaat never sends your location anywhere.
 - 🎛️ **Lives in the menu bar**, with no Dock icon.
 
 ## How it works
@@ -48,8 +48,10 @@ macOS has no public API for drawing on the Lock Screen. iMiqaat places its windo
 ```sh
 git clone https://github.com/u-sm/imiqaat.git
 cd imiqaat
-swift run
+scripts/bundle.sh && open .build/iMiqaat.app
 ```
+
+The app asks for your location once, to calculate prayer times. The location stays on your Mac.
 
 ## Installation
 
