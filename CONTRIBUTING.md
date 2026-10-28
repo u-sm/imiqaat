@@ -89,4 +89,12 @@ Tests use [Swift Testing](https://developer.apple.com/documentation/testing) (`i
 
 To check a Lock Screen change, run the app, then lock the screen with **Control-Command-Q**.
 
+### Images
+
+The card images in `docs/images/` are rendered from the real view by the Artwork tool, with fixed sample data for Makkah and never your own location. After changing the card, regenerate them and commit the result:
+
+```sh
+swift run Artwork screenshots docs/images
+```
+
 The Command Line Tools don't include SwiftUI's macro plugin, so `@State` and other SwiftUI macros won't compile. Keep view state in `ObservableObject` models so the project builds without Xcode.
