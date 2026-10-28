@@ -2,8 +2,8 @@ import Adhan
 import CoreLocation
 import Foundation
 
-/// The Mac's location. Starts from the cached fix, so it works offline, then asks
-/// CoreLocation for a fresh one and caches that.
+/// The Mac's location. Starts from the cached fix, so it works offline, then follows
+/// CoreLocation's updates and caches each one.
 @MainActor
 public final class Location: NSObject, ObservableObject, CLLocationManagerDelegate {
     /// The latest fix, or nil if there has never been one.
@@ -34,7 +34,9 @@ public final class Location: NSObject, ObservableObject, CLLocationManagerDelega
                 isDenied = true
             default:
                 isDenied = false
-                manager.requestLocation()
+                // Not a one-off request: the app runs for days, so keep retrying after a
+                // failed fix and follow the Mac when it moves to another city.
+                manager.startMonitoringSignificantLocationChanges()
             }
         }
     }
