@@ -63,7 +63,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
             menu.addItem(withTitle: "Lock Screen widget unavailable on this macOS version", action: nil, keyEquivalent: "")
             menu.addItem(.separator())
         }
-        menu.addItem(submenu("Calculation Method", CalculationMethod.allCases.filter { $0 != .other }.map { method in
+        menu.addItem(submenu("Calculation Method", PrayerMethod.allCases.map { method in
             choice(method.title, isOn: defaults.calculationMethod == method) { defaults.calculationMethod = method }
         }))
         menu.addItem(submenu("Asr Method", Madhab.allCases.map { madhab in
@@ -125,6 +125,15 @@ private final class ActionItem: NSMenuItem {
     required init(coder: NSCoder) { fatalError() }
 
     @objc private func run() { handler() }
+}
+
+extension PrayerMethod {
+    var title: String {
+        switch self {
+        case let .adhan(method): method.title
+        case .jakim: "JAKIM, Malaysia"
+        }
+    }
 }
 
 extension CalculationMethod {

@@ -12,7 +12,7 @@ import Testing
 
 @Test func savedSettingsAreUsed() {
     let defaults = emptyDefaults()
-    defaults.calculationMethod = .ummAlQura
+    defaults.calculationMethod = .adhan(.ummAlQura)
     defaults.madhab = .hanafi
     defaults.highLatitudeRule = .seventhOfTheNight
     let parameters = defaults.calculationParameters
@@ -26,4 +26,11 @@ import Testing
     defaults.highLatitudeRule = .twilightAngle
     defaults.highLatitudeRule = nil
     #expect(defaults.highLatitudeRule == nil)
+}
+
+@Test func jakimIsSavedAndUsed() {
+    let defaults = emptyDefaults()
+    defaults.calculationMethod = .jakim
+    #expect(defaults.calculationMethod == .jakim)
+    #expect(defaults.calculationParameters.fajrAngle == 18)
 }

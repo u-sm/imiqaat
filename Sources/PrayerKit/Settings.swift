@@ -1,11 +1,49 @@
 import Adhan
 import Foundation
 
+/// A calculation method: one of adhan-swift's, or JAKIM, which adhan-swift doesn't have.
+public enum PrayerMethod: Hashable {
+    case adhan(CalculationMethod)
+    /// Malaysia's JAKIM, as published on e-Solat.
+    case jakim
+
+    /// The choices offered to the user. adhan-swift's `.other` is a blank template, not a method.
+    public static var allCases: [PrayerMethod] {
+        CalculationMethod.allCases.filter { $0 != .other }.map(PrayerMethod.adhan) + [.jakim]
+    }
+
+    public var params: CalculationParameters {
+        switch self {
+        case let .adhan(method):
+            return method.params
+        case .jakim:
+            // Subuh at 18° since the 2019 Muzakarah decision. The adjustments are JAKIM's
+            // ihtiyati, fitted to e-Solat's 2026 timetables for four zones. adhan-swift keeps
+            // methodAdjustments internal, so they use `adjustments`: user adjustments (#31) must add to them.
+            var params = CalculationMethod.other.params
+            params.fajrAngle = 18
+            params.ishaAngle = 18
+            params.adjustments = PrayerAdjustments(fajr: 1, sunrise: -2, dhuhr: 2, asr: 1, maghrib: 1, isha: 1)
+            params.rounding = .up
+            return params
+        }
+    }
+}
+
 extension UserDefaults {
-    /// Defaults to Muslim World League.
-    public var calculationMethod: CalculationMethod {
-        get { string(forKey: "calculationMethod").flatMap(CalculationMethod.init) ?? .muslimWorldLeague }
-        set { set(newValue.rawValue, forKey: "calculationMethod") }
+    /// Defaults to Muslim World League. Stored as adhan-swift's raw value, or "jakim".
+    public var calculationMethod: PrayerMethod {
+        get {
+            let stored = string(forKey: "calculationMethod")
+            if stored == "jakim" { return .jakim }
+            return .adhan(stored.flatMap(CalculationMethod.init) ?? .muslimWorldLeague)
+        }
+        set {
+            switch newValue {
+            case let .adhan(method): set(method.rawValue, forKey: "calculationMethod")
+            case .jakim: set("jakim", forKey: "calculationMethod")
+            }
+        }
     }
 
     /// The Asr method. Defaults to the standard (Shafi'i) one.
