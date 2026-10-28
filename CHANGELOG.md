@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- The location now stays current while the app runs. Before, it was fetched only at launch, so after a trip the times stayed those of the previous city, and if the first fix failed the times never appeared until the app was reopened.
+
 ## [0.1.0] - 2026-10-29
 
 The first pre-release.

@@ -34,7 +34,7 @@ Lock state comes from the distributed notifications `com.apple.screenIsLocked` a
 ### Prayer times
 
 - **Calculation:** [adhan-swift](https://github.com/batoulapps/adhan-swift) (MIT) works offline. It covers every major calculation method, Asr madhab, high-latitude rules and per-prayer adjustments.
-- **Location:** one CoreLocation fix, cached in `UserDefaults`. The only entitlement is `com.apple.security.personal-information.location`.
+- **Location:** CoreLocation's significant-change updates, with the latest fix cached in `UserDefaults`. The only entitlement is `com.apple.security.personal-information.location`.
 - **Hijri date:** `Calendar(identifier: .islamicUmmAlQura)`.
 - **Staying current:** the card redraws every minute with `TimelineView(.everyMinute)` and recalculates from the current time in `TimeZone.autoupdatingCurrent`. That covers midnight, sleep and wake, and time-zone changes without separate observers.
 
