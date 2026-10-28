@@ -35,8 +35,7 @@ Lock state comes from the distributed notifications `com.apple.screenIsLocked` a
 - **Calculation:** [adhan-swift](https://github.com/batoulapps/adhan-swift) (MIT) works offline. It covers every major calculation method, Asr madhab, high-latitude rules and per-prayer adjustments.
 - **Location:** one CoreLocation fix, cached in `UserDefaults`. The only entitlement is `com.apple.security.personal-information.location`.
 - **Hijri date:** `Calendar(identifier: .islamicUmmAlQura)`.
-- **When to recompute:** at a day change (`NSCalendarDayChanged`), a clock or time-zone change, and wake from sleep.
-- **Countdown:** `TimelineView(.periodic(from: .now, by: 1))`.
+- **Staying current:** the card redraws every minute with `TimelineView(.everyMinute)` and recalculates from the current time in `TimeZone.autoupdatingCurrent`. That covers midnight, sleep and wake, and time-zone changes without separate observers.
 
 ## Layout
 
@@ -64,7 +63,7 @@ Each milestone is a GitHub milestone. Each line below is one pull request.
 | **v0.0 Foundations** | Repository documentation and templates |
 | **v0.1 Spike** | Placeholder window visible on the Lock Screen · show and hide on lock and unlock |
 | **v0.2 PrayerKit** | adhan-swift wrapper, with tests against published timetables (Makkah: Umm al-Qura; London: Moonsighting Committee) · CI: build and `swift test` on a macOS runner · location cache |
-| **v0.3 Widget** | SwiftUI view: next prayer, countdown, today's list, Hijri date · recompute on day, clock and wake changes |
+| **v0.3 Widget** | SwiftUI view: next prayer, countdown, today's list, Hijri date, kept current by a per-minute timeline |
 | **v0.4 App** | Menu-bar extra with settings pickers · launch at login with `SMAppService.mainApp` · menu-bar-only fallback when SkyLight is unavailable |
 | **v1.0 Release** | Signed and notarized DMG attached to a GitHub Release · README screenshots |
 
