@@ -4,6 +4,7 @@ import SwiftUI
 
 struct CardView: View {
     @ObservedObject var location: Location
+    let parameters: CalculationParameters
 
     var body: some View {
         Group {
@@ -17,8 +18,7 @@ struct CardView: View {
                     PrayerTimesView(
                         schedule: PrayerSchedule(
                             coordinates: coordinates,
-                            // shortcut: Muslim World League for everyone; the method picker comes in v0.4.
-                            parameters: CalculationMethod.muslimWorldLeague.params,
+                            parameters: parameters,
                             timeZone: .autoupdatingCurrent
                         ),
                         now: context.date
@@ -45,7 +45,7 @@ private struct PrayerTimesView: View {
         if let today = schedule.times(on: now), let next = schedule.next(after: now) {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(name(next.prayer)) in \(countdown(to: next.time))")
+                    Text("\(next.prayer.name) in \(countdown(to: next.time))")
                         .font(.title2.bold())
                     Text(hijriDate)
                         .foregroundStyle(.secondary)
@@ -55,7 +55,7 @@ private struct PrayerTimesView: View {
                         // After Isha the next prayer is tomorrow's Fajr, so match on time, not name.
                         let isNext = today.time(for: prayer) == next.time
                         HStack {
-                            Text(name(prayer))
+                            Text(prayer.name)
                             Spacer()
                             Text(today.time(for: prayer).formatted(date: .omitted, time: .shortened))
                         }
@@ -69,10 +69,6 @@ private struct PrayerTimesView: View {
         }
     }
 
-    private func name(_ prayer: Prayer) -> String {
-        "\(prayer)".capitalized
-    }
-
     /// "1h 12m", rounded up to the minute so it never reads 0m before the prayer.
     private func countdown(to time: Date) -> String {
         let minutes = (time.timeIntervalSince(now) / 60).rounded(.up)
@@ -83,5 +79,11 @@ private struct PrayerTimesView: View {
         let date = schedule.hijriDate(at: now)
         guard let day = date.day, let month = date.month, let year = date.year else { return "" }
         return "\(day) \(Calendar(identifier: .islamicUmmAlQura).monthSymbols[month - 1]) \(year) AH"
+    }
+}
+
+extension Prayer {
+    var name: String {
+        "\(self)".capitalized
     }
 }
