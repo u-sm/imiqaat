@@ -44,8 +44,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # This version's changelog section, without its heading.
-          awk -v v="${VERSION#v}" '$0 ~ "^## \\[" v "\\]" { on = 1; next } /^## \[/ { on = 0 } on' CHANGELOG.md > notes.md
+          # This version's changelog section, without its heading. It ends at the next
+          # heading or at the link references (`[0.1.0]: …`) at the end of the file.
+          awk -v v="${VERSION#v}" '$0 ~ "^## \\[" v "\\]" { on = 1; next } /^(## )?\[/ { on = 0 } on' CHANGELOG.md > notes.md
           cat >> notes.md <<'EOF'
 
           ## Installing
