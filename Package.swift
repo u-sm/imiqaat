@@ -9,7 +9,10 @@ let package = Package(
         .package(url: "https://github.com/batoulapps/adhan-swift", from: "1.5.0"),
     ],
     targets: [
-        .executableTarget(name: "iMiqaat"),
+        .executableTarget(
+            name: "iMiqaat",
+            dependencies: ["PrayerKit", .product(name: "Adhan", package: "adhan-swift")]
+        ),
         .target(
             name: "PrayerKit",
             dependencies: [.product(name: "Adhan", package: "adhan-swift")]
