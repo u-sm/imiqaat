@@ -2,15 +2,16 @@
 
 iMiqaat is a macOS menu-bar app that shows today's salah times on the Lock Screen.
 
-## Scope of v1.0
+## Shipped in 0.1.0
 
-- The next prayer, with a live countdown.
-- Today's times: Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha.
-- The Hijri date.
-- Shown on the Lock Screen of the main display, and in the menu bar.
-- Settings live in the menu-bar menu: calculation method, Asr madhab, and high-latitude rule.
+- The next prayer, with a live countdown, on the Lock Screen of the main display.
+- Today's times (Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha) and the Umm al-Qura Hijri date, which changes at Maghrib.
+- A menu-bar item with the next prayer, and a menu for the calculation method, Asr method and high-latitude rule.
+- Launch at Login, and a menu-bar-only fallback if a macOS update removes the private Lock Screen API.
 
-**Not in v1.0:** iqamah times, adhan audio, notifications, multiple displays, custom placement, a settings window, a screensaver, auto-update, and interaction on the Lock Screen. Each one gets an issue when there is demand for it.
+## Not planned
+
+These have been considered and set aside for now: mosque timetable import, custom Fajr and Isha angles, Qibla direction, calendar export, travel reminders, multiple displays, a screensaver, and interacting with the card on the Lock Screen. Open an issue if you need one of them.
 
 ## How it works
 
@@ -27,7 +28,7 @@ Lock state comes from the distributed notifications `com.apple.screenIsLocked` a
 
 **Consequences:**
 
-- **No Mac App Store.** The app ships as a notarized download, with no App Sandbox.
+- **No Mac App Store.** The app ships as a direct download, with no App Sandbox: ad-hoc signed for now, notarized from v1.0.
 - **It can break with any macOS update.** If the private functions are missing, the app still works from the menu bar.
 
 ### Prayer times
@@ -50,32 +51,49 @@ Tests/
 └── PrayerKitTests/ tested with `swift test` (v0.2)
 ```
 
-- The window code stays in the app target. It moves into its own module only if a second consumer appears, such as a screensaver.
+- The card view moves into a `WidgetUI` library when a second consumer arrives: the Artwork tool that renders the icon, DMG background and screenshots (#23), and later a WidgetKit widget (#51).
 - Location permission needs an `Info.plist`, which a bare executable doesn't have. The v0.2 location work adds a small script that wraps the executable in an `.app` bundle.
 - The Command Line Tools lack SwiftUI's macro plugin, so views can't use `@State` until the project requires Xcode. Keep view state in plain `ObservableObject` models.
 
 ## Milestones
 
-Each milestone is a GitHub milestone. Each line below is one pull request.
+Each milestone is a GitHub milestone, and each of its issues becomes one pull request. Milestone vX.Y ships as release vX.Y.0.
 
-| Milestone | Pull requests |
+### Done
+
+| Milestone | What it delivered |
 |---|---|
 | **v0.0 Foundations** | Repository documentation and templates |
-| **v0.1 Spike** | Placeholder window visible on the Lock Screen · show and hide on lock and unlock |
-| **v0.2 PrayerKit** | adhan-swift wrapper, with tests against published timetables (Makkah: Umm al-Qura; London: Moonsighting Committee) · CI: build and `swift test` on a macOS runner · location cache |
-| **v0.3 Widget** | SwiftUI view: next prayer, countdown, today's list, Hijri date, kept current by a per-minute timeline |
-| **v0.4 App** | Menu-bar extra with settings pickers · launch at login with `SMAppService.mainApp` · menu-bar-only fallback when SkyLight is unavailable |
-| **v1.0 Release** | Signed and notarized DMG attached to a GitHub Release · README screenshots |
+| **v0.1 Spike** | Proof that a window can be shown on the Lock Screen, only while locked |
+| **v0.2 PrayerKit** | adhan-swift wrapper tested against Umm al-Qura's published timetable · CI · location cache |
+| **v0.3 Widget** | The Lock Screen card: next prayer, countdown, today's times, Hijri date, kept current every minute |
+| **v0.4 App** | Menu-bar item with calculation settings · Launch at Login · menu-bar-only fallback |
 
-**v0.1 decides whether to continue.** If the overlay doesn't work on the current macOS, stop and rethink before building anything else.
+Released as the **0.1.0** pre-release.
+
+### Next
+
+| Milestone | Issues | Why in this order |
+|---|---|---|
+| **v0.5 Identity** | Artwork tool (#23) · app icon and menu-bar symbol (#24) · DMG install window (#25) · README screenshots (#26) · website (#27) · Homebrew tap (#28) · release-notes fix (#29) | First impressions: everything later is easier to share once the app looks finished. The Artwork tool comes first because the icon, DMG and screenshots are all drawn by it. |
+| **v0.6 Accurate times** | Settings window (#30) · per-prayer adjustments (#31) · Hijri adjustment (#32) · choose a city (#33) · iqamah times (#34) · Jumu'ah (#35) | Times that match the user's mosque are what make the app trustworthy. The Settings window comes first because the rest need number and time input. |
+| **v0.7 Reminders** | Notifications (#36) · adhan audio (#37) · pause media (#38) | Builds on accurate times and iqamah, so reminders fire at the right moments. |
+| **v0.8 Widget options** | Placement (#39) · compact card (#40) · glass style (#41) · hide on Lock Screen (#42) · menu-bar countdown (#43) · accessibility (#44) | Visual options, best designed once the card's content (iqamah, Jumu'ah) has settled. |
+| **v0.9 Islamic calendar** | Sunnah times (#45) · forbidden times (#46) · Ramadan mode (#47) · upcoming Islamic dates (#48) | Depends on the Hijri adjustment (#32) and reminders (#36). |
+| **v0.10 Languages** | Localization with Arabic (#49) · more languages (#50) | Last, so translators work on settled text instead of chasing changes. |
+| **v1.0 Release** | Developer ID signing and notarization | Waiting on an Apple Developer account. Sparkle auto-updates follow it, because updates need a stable signing identity. |
+
+### Later
+
+- **Desktop and Notification Center widget** (#51): blocked until the project has an Xcode project and a Developer ID, which WidgetKit extensions and App Groups require.
 
 ## Releases
 
-- Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md).
+- Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md). Milestone vX.Y ships as vX.Y.0, so the next release is 0.5.0.
 - Pushing a tag runs `.github/workflows/release.yml`, which builds a universal DMG and publishes it as a GitHub Release. Pull requests that change the pipeline get a dry run that builds the DMG without publishing.
 - Until v1.0, releases are ad-hoc signed pre-releases: macOS asks users to approve the app in Privacy & Security the first time they open it.
 - The Developer ID certificate and notarization key will be stored in GitHub Secrets only, and are added at v1.0.
 
 ## Open decisions
 
-- **Minimum macOS version:** set to macOS 13, the first with `MenuBarExtra` and `SMAppService`. The overlay is developed on macOS 27 and untested on older versions, so the minimum may rise once they are tried.
+- **Minimum macOS version:** set to macOS 13, the first with `SMAppService`, which Launch at Login uses. The overlay is developed on macOS 27 and untested on older versions, so the minimum may rise once they are tried.

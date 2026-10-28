@@ -20,14 +20,14 @@
 
 ## Features
 
-Planned for v1.0:
-
 - 🕌 **The next prayer**, with a live countdown, right on the Lock Screen.
 - 📅 **Today's times**: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha.
 - 🌙 **The Hijri date**, from the Umm al-Qura calendar.
 - 🧭 **Your choice of calculation method, Asr madhab and high-latitude rule.**
 - 📴 **Works offline.** Times are calculated on your Mac, and iMiqaat never sends your location anywhere.
-- 🎛️ **Lives in the menu bar**, with no Dock icon.
+- 🎛️ **Lives in the menu bar**, with no Dock icon, and can start at login.
+
+Coming next: iqamah times, reminders and the adhan, widget styles, Ramadan mode and Arabic. See the [roadmap](docs/ROADMAP.md).
 
 ## How it works
 
