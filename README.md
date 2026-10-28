@@ -30,7 +30,7 @@ Planned for v1.0:
 
 ## How it works
 
-macOS has no public API for drawing on the Lock Screen. iMiqaat uses [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow), which places a window in a private WindowServer Space above the lock layer. Prayer times are calculated locally with [adhan-swift](https://github.com/batoulapps/adhan-swift).
+macOS has no public API for drawing on the Lock Screen. iMiqaat places its window in a private WindowServer Space above the lock layer, using a technique adapted from [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow). Prayer times are calculated locally with [adhan-swift](https://github.com/batoulapps/adhan-swift).
 
 > [!IMPORTANT]
 > Because iMiqaat relies on private macOS APIs:
@@ -39,8 +39,16 @@ macOS has no public API for drawing on the Lock Screen. iMiqaat uses [SkyLightWi
 
 ## Requirements
 
-- macOS (the minimum version will be set once the Lock Screen overlay is validated)
-- Xcode with Swift 6, to build from source
+- macOS 13 or later (developed on macOS 27; older versions are untested)
+- Swift 6 from the Command Line Tools or Xcode, to build from source
+
+## Building from source
+
+```sh
+git clone https://github.com/u-sm/imiqaat.git
+cd imiqaat
+swift run
+```
 
 ## Installation
 
@@ -58,7 +66,7 @@ To report a security issue, follow [SECURITY.md](SECURITY.md) and do not open a 
 
 ## Acknowledgements
 
-- [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow) by Lakr233 (MIT), for the Lock Screen window technique.
+- [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow) by Lakr Aream (MIT), for the Lock Screen window technique, adapted in `Sources/iMiqaat/SkyLight.swift`.
 - [adhan-swift](https://github.com/batoulapps/adhan-swift) by Batoul Apps (MIT), for prayer-time calculation.
 
 ## License

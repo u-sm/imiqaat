@@ -68,4 +68,13 @@ Closes #42
 
 ## Building
 
-Build instructions will be added with the first code milestone. See the [roadmap](docs/ROADMAP.md).
+iMiqaat is a Swift package with no Xcode project. You need Swift 6, from the Command Line Tools (`xcode-select --install`) or Xcode.
+
+```sh
+swift build   # compile
+swift run     # build and launch; stop it with Ctrl-C
+```
+
+To check a Lock Screen change, run the app, then lock the screen with **Control-Command-Q**.
+
+The Command Line Tools don't include SwiftUI's macro plugin, so `@State` and other SwiftUI macros won't compile. Keep view state in `ObservableObject` models so the project builds without Xcode.

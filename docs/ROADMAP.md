@@ -16,7 +16,7 @@ iMiqaat is a macOS menu-bar app that shows today's salah times on the Lock Scree
 
 ### Lock Screen overlay
 
-macOS has no public API for drawing on the Lock Screen. The app uses [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow) (Swift package, MIT), which calls private SkyLight functions:
+macOS has no public API for drawing on the Lock Screen. The app calls private SkyLight functions, using code adapted from [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow) (MIT) in `Sources/iMiqaat/SkyLight.swift`:
 
 1. Load `SkyLight.framework` with `dlopen`.
 2. Use `SLSSpaceCreate` to make a private Space, and `SLSSpaceSetAbsoluteLevel` to raise it above the lock layer.
@@ -40,15 +40,20 @@ Lock state comes from the distributed notifications `com.apple.screenIsLocked` a
 
 ## Layout
 
-A single Xcode app target, plus one local Swift package so the maths can be tested with `swift test`:
+One Swift package, with no Xcode project. It builds with `swift build` using only the Command Line Tools:
 
 ```
-iMiqaat/
-├── App/            menu bar, Lock Screen window, SwiftUI widget view
-└── PrayerKit/      Swift package: adhan-swift wrapper, location cache, tests
+Package.swift
+Sources/
+├── iMiqaat/        app: menu bar, Lock Screen window, SwiftUI widget view
+└── PrayerKit/      adhan-swift wrapper, location cache (v0.2)
+Tests/
+└── PrayerKitTests/ tested with `swift test` (v0.2)
 ```
 
-The window code stays in the app target. It moves into its own module only if a second consumer appears, such as a screensaver.
+- The window code stays in the app target. It moves into its own module only if a second consumer appears, such as a screensaver.
+- Location permission needs an `Info.plist`, which a bare executable doesn't have. The v0.2 location work adds a small script that wraps the executable in an `.app` bundle.
+- The Command Line Tools lack SwiftUI's macro plugin, so views can't use `@State` until the project requires Xcode. Keep view state in plain `ObservableObject` models.
 
 ## Milestones
 
@@ -57,7 +62,7 @@ Each milestone is a GitHub milestone. Each line below is one pull request.
 | Milestone | Pull requests |
 |---|---|
 | **v0.0 Foundations** | Repository documentation and templates |
-| **v0.1 Spike** | SkyLightWindow "hello" window visible on the Lock Screen · show and hide on lock and unlock |
+| **v0.1 Spike** | Placeholder window visible on the Lock Screen · show and hide on lock and unlock |
 | **v0.2 PrayerKit** | adhan-swift wrapper, with tests against published timetables (Makkah: Umm al-Qura; London: Moonsighting Committee) · CI: build and `swift test` on a macOS runner · location cache |
 | **v0.3 Widget** | SwiftUI view: next prayer, countdown, today's list, Hijri date · recompute on day, clock and wake changes |
 | **v0.4 App** | Menu-bar extra with settings pickers · launch at login with `SMAppService.mainApp` · menu-bar-only fallback when SkyLight is unavailable |
@@ -72,4 +77,4 @@ Each milestone is a GitHub milestone. Each line below is one pull request.
 
 ## Open decisions
 
-- **Minimum macOS version:** whatever SkyLightWindow supports, settled during v0.1.
+- **Minimum macOS version:** set to macOS 13, the first with `MenuBarExtra` and `SMAppService`. The overlay is developed on macOS 27 and untested on older versions, so the minimum may rise once they are tried.
