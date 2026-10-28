@@ -13,7 +13,7 @@ app.setActivationPolicy(.accessory)
 let location = Location()
 
 let window = NSWindow(
-    contentRect: NSRect(x: 0, y: 0, width: 280, height: 112),
+    contentRect: NSRect(x: 0, y: 0, width: 280, height: 320),
     styleMask: .borderless,
     backing: .buffered,
     defer: false
