@@ -17,3 +17,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The Lock Screen widget: the next prayer with a countdown, the Hijri date, and today's six times with the next one highlighted. It updates every minute.
 - A menu-bar item showing the next prayer, with a menu to choose the calculation method, Asr method and high-latitude rule.
 - A Launch at Login option in the menu.
+- If a macOS update removes the private Lock Screen API, the app keeps working from the menu bar and says why the widget is missing.
