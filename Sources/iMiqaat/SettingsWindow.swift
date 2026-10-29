@@ -282,6 +282,7 @@ extension SettingsView {
                     Text("Compact: only what's next").tag(CardStyle.compact)
                 }
                 .pickerStyle(.radioGroup)
+                Toggle("Show the middle and last third of the night", isOn: settings.binding(\.showSunnahTimes))
                 Picker("Text size", selection: settings.binding(\.cardTextSize)) {
                     Text("Standard").tag(CardTextSize.standard)
                     Text("Large").tag(CardTextSize.large)

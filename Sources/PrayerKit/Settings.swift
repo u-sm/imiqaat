@@ -99,6 +99,12 @@ extension UserDefaults {
         set { set(newValue.rawValue, forKey: "cardStyle") }
     }
 
+    /// Whether the full card adds the middle and last third of the night. Defaults to false.
+    public var showSunnahTimes: Bool {
+        get { bool(forKey: "showSunnahTimes") }
+        set { set(newValue, forKey: "showSunnahTimes") }
+    }
+
     /// Defaults to standard.
     public var cardTextSize: CardTextSize {
         get { string(forKey: "cardTextSize").flatMap(CardTextSize.init) ?? .standard }

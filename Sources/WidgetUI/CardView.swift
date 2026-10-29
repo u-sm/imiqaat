@@ -13,12 +13,14 @@ public struct CardView: View {
     let content: Content
     let style: CardStyle
     let scale: CGFloat
+    let showSunnahTimes: Bool
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
 
-    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard) {
+    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false) {
         self.content = content
         self.style = style
+        self.showSunnahTimes = showSunnahTimes
         scale = switch textSize {
         case .standard: 1
         case .large: 1.25
@@ -34,7 +36,7 @@ public struct CardView: View {
             case .findingLocation:
                 Text("Finding your location…")
             case let .times(schedule, now):
-                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale)
+                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale, showSunnahTimes: showSunnahTimes)
             }
         }
         .font(scaled(.body, 13, by: scale))
@@ -68,6 +70,7 @@ private struct PrayerTimesView: View {
     let now: Date
     let style: CardStyle
     let scale: CGFloat
+    let showSunnahTimes: Bool
 
     var body: some View {
         if let today = schedule.times(on: now), let countdown = schedule.countdown(at: now) {
@@ -115,6 +118,23 @@ private struct PrayerTimesView: View {
                                 [schedule.name(of: prayer, on: now), schedule.clock(today.time(for: prayer)), iqamah.map { "iqamah \($0)" }, isNext ? "next prayer" : nil]
                                     .compactMap { $0 }.joined(separator: ", ")
                             )
+                        }
+                        if showSunnahTimes, let sunnah = schedule.sunnahTimes(at: now) {
+                            ForEach([("Middle of the Night", sunnah.middleOfTheNight), ("Last Third of the Night", sunnah.lastThirdOfTheNight)], id: \.0) { name, time in
+                                HStack {
+                                    Text(name)
+                                    Spacer()
+                                    Text(schedule.clock(time))
+                                    if !schedule.iqamahTimes.isEmpty {
+                                        // Keeps the time in the adhan column.
+                                        Text("").frame(width: 56 * scale)
+                                    }
+                                }
+                                .foregroundStyle(.secondary)
+                                .accessibilityElement(children: .ignore)
+                                .accessibilityAddTraits(.isStaticText)
+                                .accessibilityLabel("\(name), \(schedule.clock(time))")
+                            }
                         }
                     }
                 }

@@ -24,7 +24,7 @@ struct LiveCardView: View {
                 // Recalculating from the current time every minute also covers midnight,
                 // sleep and wake, and time-zone changes.
                 TimelineView(.everyMinute) { context in
-                    CardView(.times(schedule, now: context.date), style: settings.defaults.cardStyle, textSize: settings.defaults.cardTextSize)
+                    CardView(.times(schedule, now: context.date), style: settings.defaults.cardStyle, textSize: settings.defaults.cardTextSize, showSunnahTimes: settings.defaults.showSunnahTimes)
                 }
             } else if location.isDenied {
                 CardView(.denied, textSize: settings.defaults.cardTextSize)

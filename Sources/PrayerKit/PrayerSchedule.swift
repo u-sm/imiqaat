@@ -45,6 +45,14 @@ public struct PrayerSchedule {
         return (.fajr, tomorrow.fajr)
     }
 
+    /// The middle and the last third of the night containing or following `date`. A night runs
+    /// from Maghrib to the next Fajr, so before Fajr it is the one that began the evening before.
+    public func sunnahTimes(at date: Date) -> SunnahTimes? {
+        guard let today = times(on: date) else { return nil }
+        if date >= today.fajr { return SunnahTimes(from: today) }
+        return calendar.date(byAdding: .day, value: -1, to: date).flatMap(times(on:)).flatMap(SunnahTimes.init(from:))
+    }
+
     /// A time as a clock in the schedule's time zone shows it, for example "15:55". That is the
     /// chosen city's time zone if there is one, so its times don't follow the Mac's clock.
     public func clock(_ date: Date) -> String {

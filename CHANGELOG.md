@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - The card can sit centered on the Lock Screen, under the clock, in the middle or above the login controls, as well as in a corner. Choose **Center High**, **Center** or **Center Low** under Position on the Card tab of Settings.
+- The full card can show the middle and the last third of the night, for Qiyam and Tahajjud. Turn it on in Settings › Card.
 
 ### Fixed
 

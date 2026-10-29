@@ -41,6 +41,13 @@ import Testing
     #expect(defaults.cardStyle == .compact)
 }
 
+@Test func cardHidesSunnahTimesUntilTurnedOn() {
+    let defaults = emptyDefaults()
+    #expect(!defaults.showSunnahTimes)
+    defaults.showSunnahTimes = true
+    #expect(defaults.showSunnahTimes)
+}
+
 @Test func menuBarShowsTheTimeUntilChanged() {
     let defaults = emptyDefaults()
     #expect(defaults.menuBarStyle == .time)
