@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-30
+
+The Islamic calendar: Ramadan mode, upcoming Islamic dates, the night prayer times and the times when voluntary prayer is discouraged, and the card centered on the Lock Screen.
+
 ### Added
 
 - The card can sit centered on the Lock Screen, under the clock, in the middle or above the login controls, as well as in a corner. Choose **Center High**, **Center** or **Center Low** under Position on the Card tab of Settings.
@@ -103,7 +107,8 @@ The first pre-release.
 - A Launch at Login option.
 - If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
 
-[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/u-sm/imiqaat/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/u-sm/imiqaat/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/u-sm/imiqaat/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/u-sm/imiqaat/compare/v0.6.0...v0.7.0

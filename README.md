@@ -22,24 +22,26 @@
 
 ## Features
 
-<img src="docs/images/lock-screen@2x.png" width="800" alt="The iMiqaat card in the bottom-left corner of the Lock Screen, showing Asr in 1h 35m, the Hijri date and today's six times">
+<img src="docs/images/lock-screen@2x.png" width="800" alt="The iMiqaat card in the bottom-left corner of the Lock Screen, showing Asr in 1h 35m, the Hijri date in Ramadan, the time to iftar and today's six times">
 
 <img src="docs/images/menu-bar@2x.png" width="116" alt="The menu-bar item: the sun-path symbol and Asr 15:55">
 
 <sub>Rendered from the app's own views with sample data for Makkah. The wallpaper is a stand-in.</sub>
 
-- 🕌 **The next prayer**, with a live countdown, right on the Lock Screen.
+- 🕌 **The next prayer**, with a live countdown, right on the Lock Screen, and over the screen saver once your Mac locks.
 - 📅 **Today's times**: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha, with your mosque's iqamah times if you add them, and Jumu'ah on Fridays.
 - 🔔 **Reminders** at the prayers you choose, at the adhan or a few minutes before, and before the iqamah.
-- 🪟 **A card your way**: frosted glass on macOS 26 and later, full or compact, larger text, in any corner of the Lock Screen, or hidden.
+- 🪟 **A card your way**: frosted glass on macOS 26 and later, full or compact, larger text, in any corner or centered on the Lock Screen, or hidden.
 - ⏱️ **A countdown in the menu bar**, or the next prayer's time, or just the icon.
-- 🌙 **The Hijri date**, from the Umm al-Qura calendar.
+- 📆 **The Hijri date and what's coming**: the Umm al-Qura date on the card, and the next Ramadan, Eids, Day of Arafah, Islamic New Year and Ashura in the menu.
+- 🌙 **Ramadan mode**: during Ramadan, the card counts down to iftar and to the end of suhoor.
+- 🤲 **Optional extras on the card**: the middle and last third of the night, for Qiyam and Tahajjud, and the times when voluntary prayer is discouraged.
 - 🧭 **Your choice of calculation method, Asr madhab and high-latitude rule.**
 - 📍 **Your location or a city.** Use the Mac's location, or choose a city and see its times in its own time zone.
 - 📴 **Works offline.** Times are calculated on your Mac, and iMiqaat never sends your location anywhere. City search, if you use it, sends what you type to Apple Maps.
 - 🎛️ **Lives in the menu bar**, with no Dock icon, and can start at login.
 
-Coming next: the adhan, Ramadan mode and Islamic dates, and Arabic. See the [roadmap](docs/ROADMAP.md).
+Coming next: Arabic and more languages, a Hijri date adjustment for local moon sighting, and the adhan. See the [roadmap](docs/ROADMAP.md).
 
 ## How it works
 
