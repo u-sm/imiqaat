@@ -44,16 +44,10 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     }
 
     private func updateTitle() {
-        guard
-            let schedule = UserDefaults.standard.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates),
-            let next = schedule.next(after: Date())
-        else {
-            // The symbol alone; its accessibility description names the app.
-            item.button?.title = ""
-            return
-        }
-        // In the schedule's time zone, which is the chosen city's if there is one.
-        item.button?.title = "\(schedule.name(of: next.prayer, on: next.time)) \(next.time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))"
+        // Without times, the symbol alone; its accessibility description names the app.
+        item.button?.title = UserDefaults.standard
+            .prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates)?
+            .menuBarTitle(at: Date()) ?? ""
     }
 
     // Rebuilt on every open, so the ticks always match the saved settings.

@@ -71,10 +71,10 @@ private struct PrayerTimesView: View {
                         HStack {
                             Text(schedule.name(of: prayer, on: now))
                             Spacer()
-                            Text(clock(today.time(for: prayer)))
+                            Text(schedule.clock(today.time(for: prayer)))
                             if !schedule.iqamahTimes.isEmpty {
                                 // The iqamah column, blank for prayers without one.
-                                Text(schedule.iqamah(for: prayer, on: now).map(clock) ?? "")
+                                Text(schedule.iqamah(for: prayer, on: now).map(schedule.clock) ?? "")
                                     .frame(width: 56, alignment: .trailing)
                             }
                         }
@@ -86,11 +86,6 @@ private struct PrayerTimesView: View {
         } else {
             Text("Prayer times can't be calculated here.")
         }
-    }
-
-    /// In the schedule's time zone, which is the Mac's unless a city is chosen.
-    private func clock(_ time: Date) -> String {
-        time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone))
     }
 
     /// "1h 12m", rounded up to the minute so it never reads 0m before the prayer.
@@ -116,5 +111,10 @@ extension PrayerSchedule {
     /// The prayer's name on the day containing `date`: Dhuhr is Jumu'ah on Fridays.
     public func name(of prayer: Prayer, on date: Date) -> String {
         isJumuah(prayer, on: date) ? "Jumu'ah" : prayer.name
+    }
+
+    /// The menu-bar item's text: the next prayer and its time, for example "Asr 15:55".
+    public func menuBarTitle(at date: Date) -> String? {
+        next(after: date).map { "\(name(of: $0.prayer, on: $0.time)) \(clock($0.time))" }
     }
 }
