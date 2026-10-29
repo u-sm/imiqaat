@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - A Settings window, opened with **Settings…** (⌘,) in the menu, for the calculation method, the Asr method and the high-latitude rule. The menu keeps quick access to the calculation method.
 - Per-prayer adjustments of up to 30 minutes either way, on the Adjustments tab of Settings, to match a local mosque's timetable.
 - Iqamah times on the Iqamah tab of Settings, a number of minutes after the adhan or at a fixed time. The card adds an iqamah column, and between the adhan and the iqamah it counts down to the iqamah.
+- Jumu'ah on Fridays: Dhuhr shows as Jumu'ah on the card and in the menu bar, with optional khutbah and Jumu'ah times. Between the adhan and the khutbah, the card counts down to the khutbah.
 - Choose a city in Settings instead of using the Mac's location. Its times are calculated and shown in its own time zone. City search sends what you type to Apple Maps.
 
 ## [0.5.0] - 2026-10-29
