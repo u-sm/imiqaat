@@ -20,7 +20,9 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     /// Call whenever the schedule or settings may have changed; it's cheap when nothing has.
     func update(_ schedule: PrayerSchedule?, reminders: Reminders) {
         guard let center else { return }
-        let requests = schedule.map { schedule in schedule.alerts(reminders, after: Date()).map { request(for: $0, in: schedule) } } ?? []
+        // From a minute ago: at a reminder's own minute it's still listed, so the list doesn't change and
+        // nothing is removed while macOS is delivering it.
+        let requests = schedule.map { schedule in schedule.alerts(reminders, after: Date().addingTimeInterval(-60)).map { request(for: $0, in: schedule) } } ?? []
         // The text too, not only the IDs: an iqamah or clock-format change keeps the IDs.
         let sent = requests.map { "\($0.identifier) \($0.content.title) \($0.content.body)" }
         guard sent != scheduled else { return }
