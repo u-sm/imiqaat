@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- A reminder could be lost if the app updated its reminders at the moment one was due.
+
 ## [0.8.1] - 2026-10-29
 
 Two reminder fixes.
