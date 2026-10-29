@@ -35,6 +35,11 @@ public enum CardStyle: String, CaseIterable {
     case full, compact
 }
 
+/// The card's text size. macOS has no Dynamic Type, so the card scales its own fonts.
+public enum CardTextSize: String, CaseIterable {
+    case standard, large, extraLarge
+}
+
 /// Which corner of the Lock Screen the card sits in. The corners stay clear of the clock at the
 /// top and the login controls at the bottom.
 public enum CardPosition: String, CaseIterable {
@@ -89,6 +94,12 @@ extension UserDefaults {
     public var cardStyle: CardStyle {
         get { string(forKey: "cardStyle").flatMap(CardStyle.init) ?? .full }
         set { set(newValue.rawValue, forKey: "cardStyle") }
+    }
+
+    /// Defaults to standard.
+    public var cardTextSize: CardTextSize {
+        get { string(forKey: "cardTextSize").flatMap(CardTextSize.init) ?? .standard }
+        set { set(newValue.rawValue, forKey: "cardTextSize") }
     }
 
     /// Defaults to the bottom-left corner.

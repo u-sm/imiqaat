@@ -37,4 +37,7 @@ import WidgetUI
     #expect(countdown == schedule.headline(at: now))
     #expect(countdown.hasPrefix("Khutbah in 5"), "\(countdown)")
     #expect(schedule.menuBarTitle(at: now, style: .iconOnly) == nil)
+    // VoiceOver's form spells the units out.
+    let spoken = try #require(schedule.headline(at: now, width: .wide))
+    #expect(spoken.hasPrefix("Khutbah in 5 ") && spoken.count > countdown.count, "\(spoken)")
 }
