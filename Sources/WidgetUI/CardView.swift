@@ -20,7 +20,7 @@ public struct CardView: View {
         Group {
             switch content {
             case .denied:
-                Text("Allow Location for iMiqaat in System Settings › Privacy & Security.")
+                Text("Allow Location for iMiqaat in System Settings › Privacy & Security, or choose a city in iMiqaat's Settings.")
             case .findingLocation:
                 Text("Finding your location…")
             case let .times(schedule, now):
