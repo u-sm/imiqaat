@@ -303,6 +303,19 @@ extension SettingsView {
                     .foregroundColor(.secondary)
             }
             discouragedTimes
+            Section {
+                Toggle("Count down to iftar and the end of suhoor", isOn: settings.binding(\.ramadanMode))
+                Picker("Suhoor ends", selection: settings.binding(\.imsakMinutes)) {
+                    Text("At Fajr").tag(0)
+                    ForEach([5, 10, 15], id: \.self) { Text("\($0) min before Fajr").tag($0) }
+                }
+                .disabled(!settings.defaults.ramadanMode)
+            } header: {
+                Text("Ramadan")
+            } footer: {
+                Text("On during the month of Ramadan only, by the Hijri date on the card.")
+                    .foregroundColor(.secondary)
+            }
         }
         .formStyle(.grouped)
     }

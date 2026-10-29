@@ -15,14 +15,18 @@ public struct CardView: View {
     let scale: CGFloat
     let showSunnahTimes: Bool
     let discouragedTimes: DiscouragedTimes?
+    let ramadanMode: Bool
+    let imsakMinutes: Int
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
 
-    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false, discouragedTimes: DiscouragedTimes? = nil) {
+    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false, discouragedTimes: DiscouragedTimes? = nil, ramadanMode: Bool = false, imsakMinutes: Int = 0) {
         self.content = content
         self.style = style
         self.showSunnahTimes = showSunnahTimes
         self.discouragedTimes = discouragedTimes
+        self.ramadanMode = ramadanMode
+        self.imsakMinutes = imsakMinutes
         scale = switch textSize {
         case .standard: 1
         case .large: 1.25
@@ -38,7 +42,7 @@ public struct CardView: View {
             case .findingLocation:
                 Text("Finding your location…")
             case let .times(schedule, now):
-                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale, showSunnahTimes: showSunnahTimes, discouragedTimes: discouragedTimes)
+                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale, showSunnahTimes: showSunnahTimes, discouragedTimes: discouragedTimes, ramadanMode: ramadanMode, imsakMinutes: imsakMinutes)
             }
         }
         .font(scaled(.body, 13, by: scale))
@@ -74,6 +78,8 @@ private struct PrayerTimesView: View {
     let scale: CGFloat
     let showSunnahTimes: Bool
     let discouragedTimes: DiscouragedTimes?
+    let ramadanMode: Bool
+    let imsakMinutes: Int
 
     var body: some View {
         if let today = schedule.times(on: now), let countdown = schedule.countdown(at: now) {
@@ -87,6 +93,10 @@ private struct PrayerTimesView: View {
                         .foregroundStyle(.secondary)
                     if let greeting {
                         Text(greeting).foregroundStyle(.secondary)
+                    }
+                    if ramadanMode, let fast = schedule.fastCountdown(at: now, imsakMinutes: imsakMinutes) {
+                        Text(fast).foregroundStyle(.secondary)
+                            .accessibilityLabel(schedule.fastCountdown(at: now, imsakMinutes: imsakMinutes, width: .wide) ?? fast)
                     }
                     if let discouragedTimes, let end = schedule.discouragedTimeEnd(at: now, discouragedTimes) {
                         Text("Avoid voluntary prayer until \(schedule.clock(end))").foregroundStyle(.secondary)
@@ -206,10 +216,27 @@ extension PrayerSchedule {
     /// time left rounded up to the minute so it never reads 0m before the prayer.
     /// `.wide` gives VoiceOver's form, "Asr in 1 hour, 12 minutes".
     public func headline(at date: Date, width: Duration.UnitsFormatStyle.UnitWidth = .narrow) -> String? {
-        countdown(at: date).map { countdown in
-            let minutes = (countdown.time.timeIntervalSince(date) / 60).rounded(.up)
-            return "\(countdown.label) in \(Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: width)))"
+        countdown(at: date).map { "\($0.label) in \(timeLeft(from: date, to: $0.time, width: width))" }
+    }
+
+    /// During Ramadan, "Iftar in 2h 05m" from Fajr until Maghrib, and "Suhoor ends in 6h 10m" from
+    /// Maghrib until `imsakMinutes` before Fajr. Nil outside Ramadan, and between the end of
+    /// suhoor and Fajr.
+    public func fastCountdown(at date: Date, imsakMinutes: Int, width: Duration.UnitsFormatStyle.UnitWidth = .narrow) -> String? {
+        guard hijriDate(at: date).month == 9, let today = times(on: date) else { return nil }
+        if today.fajr <= date, date < today.maghrib {
+            return "Iftar in \(timeLeft(from: date, to: today.maghrib, width: width))"
         }
+        // After Maghrib, the fast is tomorrow's. A day later is still tomorrow, even across a clock change.
+        let fajr = date < today.fajr ? today.fajr : times(on: date.addingTimeInterval(24 * 60 * 60))?.fajr
+        guard let end = fajr?.addingTimeInterval(-Double(imsakMinutes) * 60), date < end else { return nil }
+        return "Suhoor ends in \(timeLeft(from: date, to: end, width: width))"
+    }
+
+    /// The time left, rounded up to the minute so it never reads 0m before the moment.
+    private func timeLeft(from date: Date, to time: Date, width: Duration.UnitsFormatStyle.UnitWidth) -> String {
+        let minutes = (time.timeIntervalSince(date) / 60).rounded(.up)
+        return Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: width))
     }
 
     /// The menu-bar item's text: the next prayer and its time ("Asr 15:55"), the card's

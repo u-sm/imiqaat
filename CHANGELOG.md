@@ -12,9 +12,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The full card can show the middle and the last third of the night, for Qiyam and Tahajjud. Turn it on in Settings › Card.
 - **Upcoming Dates** in the menu: the start of Ramadan, Eid al-Fitr, the Day of Arafah, Eid al-Adha, the Islamic New Year and Ashura, soonest first, with how many days away each is. On the day, the card says "Eid Mubarak", "Day of Arafah", "Islamic New Year" or "Ashura" under the Hijri date. The dates follow the Umm al-Qura calendar, so they can differ by a day from moon sighting where you live.
 - The card can mark the times when voluntary prayer is discouraged: for a while after sunrise, before Dhuhr and before Maghrib. It's off by default; turn it on and set how long each lasts in Settings › Card.
+- Ramadan mode: during Ramadan the card counts down to iftar, and after Maghrib to the end of suhoor, at Fajr or a few minutes before. It's on by default and set in Settings › Card.
 
 ### Fixed
 
+- With the Umm al-Qura method, Isha during Ramadan is 120 minutes after Maghrib, as Umm al-Qura publishes it, instead of 90.
 - A reminder could be lost if the app updated its reminders at the moment one was due.
 
 ## [0.8.1] - 2026-10-29
