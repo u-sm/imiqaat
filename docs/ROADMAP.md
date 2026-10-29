@@ -75,7 +75,7 @@ Each milestone is a GitHub milestone, and each of its issues becomes one pull re
 | **v0.7 Reminders** | Notifications at the adhan, before it and before the iqamah · audit fixes: region in city search results, a tested countdown order, no release without changelog notes |
 | **v0.8 Widget options** | Glass card · compact style · text size · any corner and margin · hide on Lock Screen · menu-bar countdown · VoiceOver labels · Settings tabs in the toolbar |
 
-v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0**, v0.6 as **0.6.0**, v0.7 as **0.7.0** and v0.8 as **0.8.0**.
+v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0**, v0.6 as **0.6.0**, v0.7 as **0.7.0** and v0.8 as **0.8.0**, followed by **0.8.1** with two reminder fixes.
 
 ### Next
 

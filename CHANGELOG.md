@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-29
+
+Two reminder fixes.
+
 ### Fixed
 
 - Reminders sent the old text after a change that kept their times, such as a new iqamah time or switching between 12- and 24-hour time. They're now sent again with the new text.
@@ -86,7 +90,8 @@ The first pre-release.
 - A Launch at Login option.
 - If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
 
-[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/u-sm/imiqaat/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/u-sm/imiqaat/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/u-sm/imiqaat/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/u-sm/imiqaat/compare/v0.5.0...v0.6.0
