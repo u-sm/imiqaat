@@ -36,6 +36,7 @@ Lock state comes from the distributed notifications `com.apple.screenIsLocked` a
 - **Calculation:** [adhan-swift](https://github.com/batoulapps/adhan-swift) (MIT) works offline. It covers every major calculation method, Asr madhab, high-latitude rules and per-prayer adjustments.
 - **Location:** CoreLocation's significant-change updates, with the latest fix cached in `UserDefaults`. The only entitlement is `com.apple.security.personal-information.location`.
 - **Hijri date:** `Calendar(identifier: .islamicUmmAlQura)`.
+- **Discouraged times** (#46): the three times come from the hadith of 'Uqbah ibn 'Amir in Sahih Muslim (831): while the sun rises until it is up, while it stands at its zenith until it passes, and while it sets until it has set. The hadith gives no lengths in minutes, so they're settings: by default 15 minutes after sunrise, 10 before Dhuhr and 15 before Maghrib, which the maintainer chose. The feature is off by default.
 - **Staying current:** the card redraws every minute with `TimelineView(.everyMinute)` and recalculates from the current time in `TimeZone.autoupdatingCurrent`. That covers midnight, sleep and wake, and time-zone changes without separate observers.
 
 ## Layout
