@@ -101,4 +101,6 @@ swift run Artwork screenshots docs/images # the README's icon, Lock Screen and m
 
 Screenshots never use your own location. The menu-bar symbol is drawn in code (`Sources/WidgetUI/MenuBarSymbol.swift`), so it needs no image file.
 
+The `card*@2x.png` images aren't used by the README or the website. They show each state of the card (times, finding location, location denied, iqamah), so changes to the card can be reviewed in a pull request without locking the screen. Rendering again on another day can change a few bytes of images whose drawing didn't change, so commit only the images your change was meant to affect, and restore the rest with `git checkout docs/images`.
+
 The Command Line Tools don't include SwiftUI's macro plugin, so `@State` and other SwiftUI macros won't compile. Keep view state in `ObservableObject` models so the project builds without Xcode.
