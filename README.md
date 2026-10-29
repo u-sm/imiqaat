@@ -63,11 +63,17 @@ The app asks for your location once, to calculate prayer times. The location sta
 
 ## Installation
 
-Download the DMG from the latest release on the [Releases](https://github.com/u-sm/imiqaat/releases) page.
+Install with [Homebrew](https://brew.sh):
+
+```sh
+brew install --cask u-sm/tap/imiqaat
+```
+
+Or download the DMG from the latest release on the [Releases](https://github.com/u-sm/imiqaat/releases) page.
 
 Pre-releases are ad-hoc signed and not notarized by Apple, so macOS stops the app the first time you open it:
 
-1. Open the DMG and drag **iMiqaat** to **Applications**.
+1. Open the DMG and drag **iMiqaat** to **Applications** (Homebrew does this for you).
 2. Open iMiqaat. When macOS says it can't verify the developer, click **Done**.
 3. Open **System Settings › Privacy & Security**, scroll down and click **Open Anyway** next to iMiqaat.
 
