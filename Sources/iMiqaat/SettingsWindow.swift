@@ -63,7 +63,8 @@ private struct SettingsView: View {
             general.tabItem { Text("General") }
             adjustments.tabItem { Text("Adjustments") }
         }
-        .frame(width: 460)
+        // Grouped forms scroll, so they ask for no height; without one the window shrinks to the tab bar.
+        .frame(width: 460, height: 460)
         .padding(.top, 8)
     }
 
