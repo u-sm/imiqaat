@@ -81,7 +81,7 @@ v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0**, v0.6 
 
 | Milestone | Issues | Why in this order |
 |---|---|---|
-| **v0.9 Islamic calendar** | Hijri adjustment (#32) · Sunnah times (#45) · forbidden times (#46) · Ramadan mode (#47) · upcoming Islamic dates (#48) · moved from v0.8: adhan audio (#37), pause media (#38), and the location-rule tidy-up for new contributors (#77) | Depends on reminders (#36). The Hijri adjustment comes first, because Ramadan mode and Islamic dates use it. |
+| **v0.9 Islamic calendar** | Hijri adjustment (#32) · Sunnah times (#45) · forbidden times (#46) · Ramadan mode (#47) · upcoming Islamic dates (#48) · the card centered on the Lock Screen, high, middle or low (#108) · moved from v0.8: adhan audio (#37), pause media (#38), and the location-rule tidy-up for new contributors (#77) | Depends on reminders (#36). The Hijri adjustment comes first, because Ramadan mode and Islamic dates use it. |
 | **v0.10 Languages** | Localization with Arabic (#49) · more languages (#50) | Last, so translators work on settled text instead of chasing changes. |
 | **v1.0 Release** | Developer ID signing and notarization | Waiting on an Apple Developer account. Sparkle auto-updates follow it, because updates need a stable signing identity. |
 
