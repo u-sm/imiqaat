@@ -58,6 +58,12 @@ extension UserDefaults {
         set { set(newValue?.rawValue, forKey: "highLatitudeRule") }
     }
 
+    /// Whether the card shows on the Lock Screen. Defaults to true.
+    public var showOnLockScreen: Bool {
+        get { object(forKey: "showOnLockScreen") as? Bool ?? true }
+        set { set(newValue, forKey: "showOnLockScreen") }
+    }
+
     /// The user's offsets in minutes, to match a local mosque's timetable. Defaults to none.
     public var prayerAdjustments: PrayerAdjustments {
         get { data(forKey: "prayerAdjustments").flatMap { try? JSONDecoder().decode(PrayerAdjustments.self, from: $0) } ?? PrayerAdjustments() }

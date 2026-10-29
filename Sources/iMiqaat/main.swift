@@ -39,13 +39,14 @@ if let moveToLockScreen {
 
 // Hide with alpha rather than orderOut, so the window never leaves the Lock Screen Space.
 let session = CGSessionCopyCurrentDictionary() as? [String: Any]
-window.alphaValue = session?["CGSSessionScreenIsLocked"] as? Bool == true ? 1 : 0
+window.alphaValue = session?["CGSSessionScreenIsLocked"] as? Bool == true && UserDefaults.standard.showOnLockScreen ? 1 : 0
 
 for (name, alpha) in [("com.apple.screenIsLocked", 1.0), ("com.apple.screenIsUnlocked", 0.0)] {
     DistributedNotificationCenter.default().addObserver(
         forName: .init(name), object: nil, queue: .main
     ) { _ in
-        MainActor.assumeIsolated { window.alphaValue = alpha }
+        // The setting is read at each lock, so turning it back on needs no restart.
+        MainActor.assumeIsolated { window.alphaValue = UserDefaults.standard.showOnLockScreen ? alpha : 0 }
     }
 }
 
