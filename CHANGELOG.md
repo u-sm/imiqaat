@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-29
+
+Reminders: a notification at the prayers you choose, at the adhan or a few minutes before, and before the iqamah.
+
 ### Added
 
 - Reminders: a notification at each prayer you choose, at the adhan or 5 to 30 minutes before, and optionally a few minutes before the iqamah. Set them on the new Reminders tab of Settings; iMiqaat asks to send notifications the first time you turn one on.
@@ -58,7 +62,8 @@ The first pre-release.
 - A Launch at Login option.
 - If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
 
-[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/u-sm/imiqaat/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/u-sm/imiqaat/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/u-sm/imiqaat/compare/v0.1.0...v0.5.0
 [0.1.0]: https://github.com/u-sm/imiqaat/releases/tag/v0.1.0

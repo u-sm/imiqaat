@@ -72,15 +72,15 @@ Each milestone is a GitHub milestone, and each of its issues becomes one pull re
 | **v0.4 App** | Menu-bar item with calculation settings · Launch at Login · menu-bar-only fallback |
 | **v0.5 Identity** | Artwork tool · app icon and menu-bar symbol · DMG install window · README screenshots · website · Homebrew tap · release-notes fix · location kept current · JAKIM method |
 | **v0.6 Accurate times** | Settings window · per-prayer adjustments · choose a city · iqamah times · Jumu'ah · audit fixes: one tested time format, city search feedback |
+| **v0.7 Reminders** | Notifications at the adhan, before it and before the iqamah · audit fixes: region in city search results, a tested countdown order, no release without changelog notes |
 
-v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0** and v0.6 as **0.6.0**.
+v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0**, v0.6 as **0.6.0** and v0.7 as **0.7.0**.
 
 ### Next
 
 | Milestone | Issues | Why in this order |
 |---|---|---|
-| **v0.7 Reminders** | Notifications (#36) · adhan audio (#37) · pause media (#38) · tidy-ups for new contributors: location rule in one place (#77), submenu helper (#79) · audit fixes: region in city search results (#85), a test for the countdown's order (#86), no release without a changelog section (#87) | Builds on accurate times and iqamah, so reminders fire at the right moments. |
-| **v0.8 Widget options** | Placement (#39) · compact card (#40) · glass style (#41) · hide on Lock Screen (#42) · menu-bar countdown (#43) · accessibility (#44) | Visual options, best designed once the card's content (iqamah, Jumu'ah) has settled. |
+| **v0.8 Widget options** | Placement (#39) · compact card (#40) · glass style (#41) · hide on Lock Screen (#42) · menu-bar countdown (#43) · accessibility (#44) · moved from v0.7: adhan audio (#37), pause media (#38), and the tidy-ups for new contributors, location rule in one place (#77) and submenu helper (#79) | Visual options, best designed once the card's content (iqamah, Jumu'ah) has settled. The adhan audio waits for a recording with a clear licence, and pausing media builds on it. |
 | **v0.9 Islamic calendar** | Hijri adjustment (#32) · Sunnah times (#45) · forbidden times (#46) · Ramadan mode (#47) · upcoming Islamic dates (#48) | Depends on reminders (#36). The Hijri adjustment comes first, because Ramadan mode and Islamic dates use it. |
 | **v0.10 Languages** | Localization with Arabic (#49) · more languages (#50) | Last, so translators work on settled text instead of chasing changes. |
 | **v1.0 Release** | Developer ID signing and notarization | Waiting on an Apple Developer account. Sparkle auto-updates follow it, because updates need a stable signing identity. |
@@ -91,7 +91,7 @@ v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0** and v0
 
 ## Releases
 
-- Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md). Milestone vX.Y ships as vX.Y.0, so the next release is 0.7.0.
+- Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md). Milestone vX.Y ships as vX.Y.0, so the next release is 0.8.0.
 - Pushing a tag runs `.github/workflows/release.yml`, which builds a universal DMG and publishes it as a GitHub Release. Pull requests that change the pipeline get a dry run that builds the DMG without publishing.
 - Until v1.0, releases are ad-hoc signed pre-releases: macOS asks users to approve the app in Privacy & Security the first time they open it.
 - The Developer ID certificate and notarization key will be stored in GitHub Secrets only, and are added at v1.0.
