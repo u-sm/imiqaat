@@ -30,6 +30,11 @@ public enum PrayerMethod: Hashable {
     }
 }
 
+/// What the menu-bar item shows beside its symbol.
+public enum MenuBarStyle: String, CaseIterable {
+    case time, countdown, iconOnly
+}
+
 extension UserDefaults {
     /// Defaults to Muslim World League. Stored as adhan-swift's raw value, or "jakim".
     public var calculationMethod: PrayerMethod {
@@ -62,6 +67,12 @@ extension UserDefaults {
     public var showOnLockScreen: Bool {
         get { object(forKey: "showOnLockScreen") as? Bool ?? true }
         set { set(newValue, forKey: "showOnLockScreen") }
+    }
+
+    /// Defaults to the next prayer's time.
+    public var menuBarStyle: MenuBarStyle {
+        get { string(forKey: "menuBarStyle").flatMap(MenuBarStyle.init) ?? .time }
+        set { set(newValue.rawValue, forKey: "menuBarStyle") }
     }
 
     /// The user's offsets in minutes, to match a local mosque's timetable. Defaults to none.

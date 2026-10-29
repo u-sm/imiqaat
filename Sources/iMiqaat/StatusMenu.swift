@@ -48,7 +48,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         let defaults = UserDefaults.standard
         let schedule = defaults.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates)
         // Without times, the symbol alone; its accessibility description names the app.
-        item.button?.title = schedule?.menuBarTitle(at: Date()) ?? ""
+        item.button?.title = schedule?.menuBarTitle(at: Date(), style: defaults.menuBarStyle) ?? ""
         notifier.update(schedule, reminders: defaults.reminders)
     }
 
@@ -64,6 +64,9 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         // Quick access to the method; the other settings are in the Settings window.
         menu.addItem(submenu("Calculation Method", PrayerMethod.allCases.map { method in
             ActionItem(method.title, isOn: defaults.calculationMethod == method) { defaults.calculationMethod = method }
+        }))
+        menu.addItem(submenu("Menu Bar Shows", MenuBarStyle.allCases.map { style in
+            ActionItem(style.title, isOn: defaults.menuBarStyle == style) { defaults.menuBarStyle = style }
         }))
         let settings = ActionItem("Settings…", isOn: false) { [weak self] in self?.settingsWindow.show() }
         settings.keyEquivalent = ","
@@ -123,6 +126,16 @@ extension PrayerMethod {
         switch self {
         case let .adhan(method): method.title
         case .jakim: "JAKIM, Malaysia"
+        }
+    }
+}
+
+extension MenuBarStyle {
+    var title: String {
+        switch self {
+        case .time: "Next Prayer Time"
+        case .countdown: "Countdown"
+        case .iconOnly: "Icon Only"
         }
     }
 }
