@@ -105,6 +105,18 @@ extension UserDefaults {
         set { set(newValue, forKey: "showSunnahTimes") }
     }
 
+    /// Whether the card counts down to iftar and the end of suhoor during Ramadan. Defaults to true.
+    public var ramadanMode: Bool {
+        get { object(forKey: "ramadanMode") as? Bool ?? true }
+        set { set(newValue, forKey: "ramadanMode") }
+    }
+
+    /// How many minutes before Fajr suhoor ends. Defaults to 0, at Fajr.
+    public var imsakMinutes: Int {
+        get { integer(forKey: "imsakMinutes") }
+        set { set(newValue, forKey: "imsakMinutes") }
+    }
+
     /// Defaults to standard.
     public var cardTextSize: CardTextSize {
         get { string(forKey: "cardTextSize").flatMap(CardTextSize.init) ?? .standard }

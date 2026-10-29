@@ -21,10 +21,22 @@ public struct PrayerSchedule {
         return calendar
     }
 
+    private var hijriCalendar: Calendar {
+        var calendar = Calendar(identifier: .islamicUmmAlQura)
+        calendar.timeZone = timeZone
+        return calendar
+    }
+
     /// The times for the day containing `date`. The day is taken in the location's
     /// time zone, not the Mac's. Nil if adhan-swift can't calculate them.
     public func times(on date: Date) -> PrayerTimes? {
-        PrayerTimes(
+        var parameters = parameters
+        // Umm al-Qura's Isha is 120 minutes after Maghrib in Ramadan instead of 90; adhan-swift
+        // leaves the extra 30 to apps.
+        if parameters.method == .ummAlQura, hijriCalendar.component(.month, from: date) == 9 {
+            parameters.adjustments.isha += 30
+        }
+        return PrayerTimes(
             coordinates: coordinates,
             date: calendar.dateComponents([.year, .month, .day], from: date),
             calculationParameters: parameters
@@ -62,10 +74,8 @@ public struct PrayerSchedule {
     /// The Umm al-Qura Hijri date. The Islamic day begins at Maghrib, so from Maghrib
     /// onwards this is the next day's date.
     public func hijriDate(at date: Date) -> DateComponents {
-        var hijri = Calendar(identifier: .islamicUmmAlQura)
-        hijri.timeZone = timeZone
         let afterMaghrib = times(on: date).map { date >= $0.maghrib } ?? false
-        let day = afterMaghrib ? hijri.date(byAdding: .day, value: 1, to: date) ?? date : date
-        return hijri.dateComponents([.year, .month, .day], from: day)
+        let day = afterMaghrib ? hijriCalendar.date(byAdding: .day, value: 1, to: date) ?? date : date
+        return hijriCalendar.dateComponents([.year, .month, .day], from: day)
     }
 }
