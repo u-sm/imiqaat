@@ -49,7 +49,9 @@ private final class CitySearch: ObservableObject {
             results = items.compactMap { item in
                 guard let timeZone = item.timeZone else { return nil }
                 let place = item.placemark
-                let name = [place.locality ?? item.name, place.country].compactMap { $0 }.joined(separator: ", ")
+                // Apple's short address names the region where places share a name:
+                // "Portland, OR, United States" and "Portland, ME, United States".
+                let name = place.title ?? item.name ?? ""
                 return City(name: name, coordinates: Coordinates(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude), timeZone: timeZone)
             }
             message = results.isEmpty ? "No cities found. Check the spelling or your connection." : nil

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- City search results name the region where places share a name, such as Portland, OR and Portland, ME, so you can tell which one you're choosing. Cities chosen before keep their old name until chosen again.
+
 ## [0.6.0] - 2026-10-29
 
 Times that match your mosque: a Settings window with per-prayer adjustments, iqamah times, Jumu'ah on Fridays, and the choice of a city instead of the Mac's location.
