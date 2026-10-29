@@ -6,13 +6,14 @@ import ServiceManagement
 import WidgetUI
 
 /// The menu-bar item: the app's symbol with the next prayer and its time, and a menu with the
-/// calculation method and the Settings window.
+/// calculation method and the Settings window. It also keeps the reminders scheduled.
 @MainActor
 final class StatusMenu: NSObject, NSMenuDelegate {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let location: Location
     private let lockScreenAvailable: Bool
     private let settingsWindow = SettingsWindow()
+    private let notifier = Notifier()
     private var timer: Timer?
     private var locationChanges: AnyCancellable?
     private var settingChanges: AnyCancellable?
@@ -25,29 +26,30 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         item.button?.imagePosition = .imageLeading
         item.menu = NSMenu()
         item.menu?.delegate = self
-        updateTitle()
+        update()
 
         // Prayer times fall on whole minutes, so check at the start of every minute.
         let nextMinute = Calendar.current.nextDate(after: Date(), matching: DateComponents(second: 0), matchingPolicy: .nextTime) ?? Date()
         let timer = Timer(fire: nextMinute, interval: 60, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated { self?.updateTitle() }
+            MainActor.assumeIsolated { self?.update() }
         }
         RunLoop.main.add(timer, forMode: .common)
         self.timer = timer
 
         locationChanges = location.objectWillChange.receive(on: RunLoop.main).sink { [weak self] _ in
-            MainActor.assumeIsolated { self?.updateTitle() }
+            MainActor.assumeIsolated { self?.update() }
         }
         // Any settings change, from the menu or the Settings window.
         settingChanges = NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification, object: UserDefaults.standard)
-            .sink { [weak self] _ in MainActor.assumeIsolated { self?.updateTitle() } }
+            .sink { [weak self] _ in MainActor.assumeIsolated { self?.update() } }
     }
 
-    private func updateTitle() {
+    private func update() {
+        let defaults = UserDefaults.standard
+        let schedule = defaults.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates)
         // Without times, the symbol alone; its accessibility description names the app.
-        item.button?.title = UserDefaults.standard
-            .prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates)?
-            .menuBarTitle(at: Date()) ?? ""
+        item.button?.title = schedule?.menuBarTitle(at: Date()) ?? ""
+        notifier.update(schedule, reminders: defaults.reminders)
     }
 
     // Rebuilt on every open, so the ticks always match the saved settings.

@@ -75,6 +75,7 @@ private struct SettingsView: View {
             general.tabItem { Text("General") }
             adjustments.tabItem { Text("Adjustments") }
             iqamah.tabItem { Text("Iqamah") }
+            reminders.tabItem { Text("Reminders") }
         }
         // Grouped forms scroll, so they ask for no height; without one the window shrinks to the tab bar.
         .frame(width: 460, height: 460)
@@ -233,6 +234,32 @@ extension SettingsView {
             }
         case nil:
             EmptyView()
+        }
+    }
+}
+
+extension SettingsView {
+    var reminders: some View {
+        Form {
+            let path: ReferenceWritableKeyPath<UserDefaults, Reminders> = \.reminders
+            Section {
+                ForEach(Prayer.allCases, id: \.self) { prayer in
+                    reminderPicker(prayer.name, path.appending(path: \Reminders.[prayer]), minutes: [0, 5, 10, 15, 30])
+                }
+                reminderPicker("Before the iqamah", path.appending(path: \.beforeIqamah), minutes: [5, 10, 15])
+            } footer: {
+                Text("The iqamah reminder is for prayers with an iqamah time. iMiqaat asks to send notifications the first time you turn one on; if you said no, allow them in System Settings › Notifications.")
+                    .foregroundColor(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    /// Off, or a number of minutes before; 0 reads "At the adhan".
+    private func reminderPicker(_ title: String, _ path: ReferenceWritableKeyPath<UserDefaults, Int?>, minutes: [Int]) -> some View {
+        Picker(title, selection: settings.binding(path)) {
+            Text("Off").tag(Int?.none)
+            ForEach(minutes, id: \.self) { Text($0 == 0 ? "At the adhan" : "\($0) min before").tag(Int?.some($0)) }
         }
     }
 }
