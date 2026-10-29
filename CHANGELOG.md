@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Reminders: a notification at each prayer you choose, at the adhan or 5 to 30 minutes before, and optionally a few minutes before the iqamah. Set them on the new Reminders tab of Settings; iMiqaat asks to send notifications the first time you turn one on.
+
 ### Fixed
 
 - City search results name the region where places share a name, such as Portland, OR and Portland, ME, so you can tell which one you're choosing. Cities chosen before keep their old name until chosen again.
