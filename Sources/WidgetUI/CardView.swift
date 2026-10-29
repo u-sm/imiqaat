@@ -20,7 +20,7 @@ public struct CardView: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
 
-    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false, discouragedTimes: DiscouragedTimes? = nil, ramadanMode: Bool = false, imsakMinutes: Int = 0) {
+    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false, discouragedTimes: DiscouragedTimes? = nil, ramadanMode: Bool = true, imsakMinutes: Int = 0) {
         self.content = content
         self.style = style
         self.showSunnahTimes = showSunnahTimes
