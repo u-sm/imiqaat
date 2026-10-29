@@ -14,13 +14,15 @@ public struct CardView: View {
     let style: CardStyle
     let scale: CGFloat
     let showSunnahTimes: Bool
+    let discouragedTimes: DiscouragedTimes?
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
 
-    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false) {
+    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false, discouragedTimes: DiscouragedTimes? = nil) {
         self.content = content
         self.style = style
         self.showSunnahTimes = showSunnahTimes
+        self.discouragedTimes = discouragedTimes
         scale = switch textSize {
         case .standard: 1
         case .large: 1.25
@@ -36,7 +38,7 @@ public struct CardView: View {
             case .findingLocation:
                 Text("Finding your location…")
             case let .times(schedule, now):
-                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale, showSunnahTimes: showSunnahTimes)
+                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale, showSunnahTimes: showSunnahTimes, discouragedTimes: discouragedTimes)
             }
         }
         .font(scaled(.body, 13, by: scale))
@@ -71,6 +73,7 @@ private struct PrayerTimesView: View {
     let style: CardStyle
     let scale: CGFloat
     let showSunnahTimes: Bool
+    let discouragedTimes: DiscouragedTimes?
 
     var body: some View {
         if let today = schedule.times(on: now), let countdown = schedule.countdown(at: now) {
@@ -84,6 +87,9 @@ private struct PrayerTimesView: View {
                         .foregroundStyle(.secondary)
                     if let greeting {
                         Text(greeting).foregroundStyle(.secondary)
+                    }
+                    if let discouragedTimes, let end = schedule.discouragedTimeEnd(at: now, discouragedTimes) {
+                        Text("Avoid voluntary prayer until \(schedule.clock(end))").foregroundStyle(.secondary)
                     }
                 }
                 if style == .full {

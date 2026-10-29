@@ -302,8 +302,40 @@ extension SettingsView {
                 Text("Compact shows the next prayer's countdown and time, and the Hijri date.")
                     .foregroundColor(.secondary)
             }
+            discouragedTimes
         }
         .formStyle(.grouped)
+    }
+
+    /// Whether the card marks the times when voluntary prayer is discouraged, and how long each lasts.
+    @ViewBuilder private var discouragedTimes: some View {
+        let isOn = Binding(get: { settings.defaults.discouragedTimes != nil }, set: { settings.defaults.discouragedTimes = $0 ? DiscouragedTimes() : nil })
+        Section {
+            Toggle("Mark when voluntary prayer is discouraged", isOn: isOn)
+            if settings.defaults.discouragedTimes != nil {
+                lengthStepper("After sunrise", \.afterSunrise)
+                lengthStepper("Before Dhuhr", \.beforeDhuhr)
+                lengthStepper("Before Maghrib", \.beforeMaghrib)
+            }
+        } footer: {
+            Text("During these times the card says until when to avoid voluntary prayer. Scholars differ on how long they last, so set them to what your mosque follows.")
+                .foregroundColor(.secondary)
+        }
+    }
+
+    private func lengthStepper(_ title: String, _ length: WritableKeyPath<DiscouragedTimes, Int>) -> some View {
+        // Not a force-unwrapped key path: SwiftUI may read this once more just after the toggle turns off.
+        let minutes = Binding(
+            get: { (settings.defaults.discouragedTimes ?? DiscouragedTimes())[keyPath: length] },
+            set: { settings.defaults.discouragedTimes?[keyPath: length] = $0 }
+        )
+        return Stepper(value: minutes, in: 5...30, step: 5) {
+            HStack {
+                Text(title)
+                Spacer()
+                Text("\(minutes.wrappedValue) min").monospacedDigit().foregroundColor(.secondary)
+            }
+        }
     }
 
     var reminders: some View {

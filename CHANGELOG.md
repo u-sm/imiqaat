@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The card can sit centered on the Lock Screen, under the clock, in the middle or above the login controls, as well as in a corner. Choose **Center High**, **Center** or **Center Low** under Position on the Card tab of Settings.
 - The full card can show the middle and the last third of the night, for Qiyam and Tahajjud. Turn it on in Settings › Card.
 - **Upcoming Dates** in the menu: the start of Ramadan, Eid al-Fitr, the Day of Arafah, Eid al-Adha, the Islamic New Year and Ashura, soonest first, with how many days away each is. On the day, the card says "Eid Mubarak", "Day of Arafah", "Islamic New Year" or "Ashura" under the Hijri date. The dates follow the Umm al-Qura calendar, so they can differ by a day from moon sighting where you live.
+- The card can mark the times when voluntary prayer is discouraged: for a while after sunrise, before Dhuhr and before Maghrib. It's off by default; turn it on and set how long each lasts in Settings › Card.
 
 ### Fixed
 
