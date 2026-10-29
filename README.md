@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/images/icon@2x.png" width="128" height="128" alt="iMiqaat icon: the sun's path from dawn to night">
+
 # iMiqaat
 
 **Salah times on your Mac's Lock Screen.**
@@ -19,6 +21,12 @@
 > iMiqaat is in early development. Pre-releases are available for testing; follow the [roadmap](docs/ROADMAP.md) to see what is being built.
 
 ## Features
+
+<img src="docs/images/lock-screen@2x.png" width="800" alt="The iMiqaat card in the bottom-left corner of the Lock Screen, showing Asr in 1h 35m, the Hijri date and today's six times">
+
+<img src="docs/images/menu-bar@2x.png" width="116" alt="The menu-bar item: the sun-path symbol and Asr 15:55">
+
+<sub>Rendered from the app's own views with sample data for Makkah. The wallpaper is a stand-in.</sub>
 
 - 🕌 **The next prayer**, with a live countdown, right on the Lock Screen.
 - 📅 **Today's times**: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha.

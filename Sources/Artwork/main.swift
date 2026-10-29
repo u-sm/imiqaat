@@ -79,13 +79,17 @@ default:
     let afternoon = calendar.date(from: DateComponents(year: 2026, month: 3, day: 1, hour: 14, minute: 20))!
 
     // shortcut: text follows the Mac's language and 12/24-hour setting; pin the locale when the card is localized (#49).
-    for (name, card) in [
-        ("card", CardView(.times(makkah, now: afternoon))),
-        ("card-finding-location", CardView(.findingLocation)),
-        ("card-location-denied", CardView(.denied)),
-    ] {
+    let images: [(String, AnyView)] = [
+        ("card", AnyView(CardView(.times(makkah, now: afternoon)))),
+        ("card-finding-location", AnyView(CardView(.findingLocation))),
+        ("card-location-denied", AnyView(CardView(.denied))),
+        ("lock-screen", AnyView(LockScreenScene(schedule: makkah, now: afternoon))),
+        ("menu-bar", AnyView(MenuBarScene(schedule: makkah, now: afternoon))),
+        ("icon", AnyView(AppIcon(simplified: false).frame(width: 128, height: 128))),
+    ]
+    for (name, view) in images {
         let url = output.appendingPathComponent("\(name)@2x.png")
-        render(card, to: url, scale: 2)
+        render(view, to: url, scale: 2)
         print(url.path)
     }
 }
