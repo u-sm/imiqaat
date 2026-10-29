@@ -11,9 +11,11 @@ public struct CardView: View {
     }
 
     let content: Content
+    let style: CardStyle
 
-    public init(_ content: Content) {
+    public init(_ content: Content, style: CardStyle = .full) {
         self.content = content
+        self.style = style
     }
 
     public var body: some View {
@@ -24,7 +26,7 @@ public struct CardView: View {
             case .findingLocation:
                 Text("Finding your location…")
             case let .times(schedule, now):
-                PrayerTimesView(schedule: schedule, now: now)
+                PrayerTimesView(schedule: schedule, now: now, style: style)
             }
         }
         .foregroundStyle(.white)
@@ -37,6 +39,7 @@ public struct CardView: View {
 private struct PrayerTimesView: View {
     let schedule: PrayerSchedule
     let now: Date
+    let style: CardStyle
 
     var body: some View {
         if let today = schedule.times(on: now), let countdown = schedule.countdown(at: now) {
@@ -44,33 +47,36 @@ private struct PrayerTimesView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(schedule.headline(at: now) ?? "")
                         .font(.title2.bold())
-                    Text(hijriDate)
+                    // Compact keeps only this: the time it counts down to, and the Hijri date.
+                    Text(style == .compact ? "\(schedule.clock(countdown.time)) · \(hijriDate)" : hijriDate)
                         .foregroundStyle(.secondary)
                 }
-                VStack(spacing: 4) {
-                    if !schedule.iqamahTimes.isEmpty {
-                        HStack {
-                            Spacer()
-                            Text("Adhan")
-                            Text("Iqamah").frame(width: 56, alignment: .trailing)
-                        }
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    }
-                    ForEach(Prayer.allCases, id: \.self) { prayer in
-                        let isNext = prayer == countdown.row
-                        HStack {
-                            Text(schedule.name(of: prayer, on: now))
-                            Spacer()
-                            Text(schedule.clock(today.time(for: prayer)))
-                            if !schedule.iqamahTimes.isEmpty {
-                                // The iqamah column, blank for prayers without one.
-                                Text(schedule.iqamah(for: prayer, on: now).map(schedule.clock) ?? "")
-                                    .frame(width: 56, alignment: .trailing)
+                if style == .full {
+                    VStack(spacing: 4) {
+                        if !schedule.iqamahTimes.isEmpty {
+                            HStack {
+                                Spacer()
+                                Text("Adhan")
+                                Text("Iqamah").frame(width: 56, alignment: .trailing)
                             }
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                         }
-                        .fontWeight(isNext ? .bold : .regular)
-                        .foregroundStyle(isNext ? .primary : .secondary)
+                        ForEach(Prayer.allCases, id: \.self) { prayer in
+                            let isNext = prayer == countdown.row
+                            HStack {
+                                Text(schedule.name(of: prayer, on: now))
+                                Spacer()
+                                Text(schedule.clock(today.time(for: prayer)))
+                                if !schedule.iqamahTimes.isEmpty {
+                                    // The iqamah column, blank for prayers without one.
+                                    Text(schedule.iqamah(for: prayer, on: now).map(schedule.clock) ?? "")
+                                        .frame(width: 56, alignment: .trailing)
+                                }
+                            }
+                            .fontWeight(isNext ? .bold : .regular)
+                            .foregroundStyle(isNext ? .primary : .secondary)
+                        }
                     }
                 }
             }

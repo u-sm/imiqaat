@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - **Show on Lock Screen** in the menu, on by default. Turn it off to keep only the menu-bar times.
+- A compact card style, on the new Card tab of Settings: only the next prayer's countdown and time, and the Hijri date.
 - **Menu Bar Shows** in the menu: the next prayer's time, a countdown like the card's ("Asr in 1h 12m"), or the icon only.
 
 ### Fixed

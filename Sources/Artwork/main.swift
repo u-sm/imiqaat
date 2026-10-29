@@ -91,6 +91,7 @@ default:
     let images: [(String, AnyView)] = [
         ("card-iqamah", AnyView(CardView(.times(withIqamah, now: afterAsr)))),
         ("card", AnyView(CardView(.times(makkah, now: afternoon)))),
+        ("card-compact", AnyView(CardView(.times(makkah, now: afternoon), style: .compact))),
         ("card-finding-location", AnyView(CardView(.findingLocation))),
         ("card-location-denied", AnyView(CardView(.denied))),
         ("lock-screen", AnyView(LockScreenScene(schedule: makkah, now: afternoon))),

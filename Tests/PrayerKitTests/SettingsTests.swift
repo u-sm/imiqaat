@@ -17,6 +17,13 @@ import Testing
     #expect(!defaults.showOnLockScreen)
 }
 
+@Test func cardIsFullUntilChanged() {
+    let defaults = emptyDefaults()
+    #expect(defaults.cardStyle == .full)
+    defaults.cardStyle = .compact
+    #expect(defaults.cardStyle == .compact)
+}
+
 @Test func menuBarShowsTheTimeUntilChanged() {
     let defaults = emptyDefaults()
     #expect(defaults.menuBarStyle == .time)
