@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-29
+
+Times that match your mosque: a Settings window with per-prayer adjustments, iqamah times, Jumu'ah on Fridays, and the choice of a city instead of the Mac's location.
+
 ### Added
 
 - A Settings window, opened with **Settings…** (⌘,) in the menu, for the calculation method, the Asr method and the high-latitude rule. The menu keeps quick access to the calculation method.
@@ -13,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Iqamah times on the Iqamah tab of Settings, a number of minutes after the adhan or at a fixed time. The card adds an iqamah column, and between the adhan and the iqamah it counts down to the iqamah.
 - Jumu'ah on Fridays: Dhuhr shows as Jumu'ah on the card and in the menu bar, with optional khutbah and Jumu'ah times. Between the adhan and the khutbah, the card counts down to the khutbah.
 - Choose a city in Settings instead of using the Mac's location. Its times are calculated and shown in its own time zone. City search sends what you type to Apple Maps.
+
+### Changed
+
+- The Asr method and the high-latitude rule moved from the menu to the Settings window. The menu keeps the calculation method.
 
 ## [0.5.0] - 2026-10-29
 
@@ -42,6 +50,7 @@ The first pre-release.
 - A Launch at Login option.
 - If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
 
-[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/u-sm/imiqaat/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/u-sm/imiqaat/compare/v0.1.0...v0.5.0
 [0.1.0]: https://github.com/u-sm/imiqaat/releases/tag/v0.1.0
