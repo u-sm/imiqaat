@@ -9,6 +9,7 @@ on:
     paths:
       - .github/workflows/release.yml
       - scripts/bundle.sh
+      - scripts/dmg/**
 
 permissions:
   contents: write
@@ -26,11 +27,9 @@ jobs:
         run: scripts/bundle.sh -c release --arch arm64 --arch x86_64
 
       - name: Make the DMG
-        run: |
-          mkdir dmg
-          cp -R .build/iMiqaat.app dmg/
-          ln -s /Applications dmg/Applications
-          hdiutil create -volname iMiqaat -srcfolder dmg -format UDZO "iMiqaat-${VERSION#v}.dmg"
+        # The window layout is in scripts/dmg/settings.py. pipx runs a pinned dmgbuild
+        # without installing it into the runner's Python.
+        run: pipx run --spec dmgbuild==1.6.7 dmgbuild -s scripts/dmg/settings.py -D app=.build/iMiqaat.app iMiqaat "iMiqaat-${VERSION#v}.dmg"
 
       - name: Attach the DMG to this run
         if: github.event_name == 'pull_request'

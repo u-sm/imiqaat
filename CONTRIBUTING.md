@@ -94,6 +94,7 @@ To check a Lock Screen change, run the app, then lock the screen with **Control-
 The project's images are rendered by the Artwork tool and committed, so normal builds don't need to run it. After changing a drawing, regenerate its images and commit the result:
 
 ```sh
+swift run Artwork dmg scripts/dmg         # the DMG window's background, laid out by scripts/dmg/settings.py
 swift run Artwork icon Resources          # Resources/AppIcon.icns, from Sources/Artwork/AppIcon.swift
 swift run Artwork screenshots docs/images # the card, with fixed sample data for Makkah
 ```
