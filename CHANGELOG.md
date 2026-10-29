@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - A Settings window, opened with **Settings…** (⌘,) in the menu, for the calculation method, the Asr method and the high-latitude rule. The menu keeps quick access to the calculation method.
+- Per-prayer adjustments of up to 30 minutes either way, on the Adjustments tab of Settings, to match a local mosque's timetable.
 
 ## [0.5.0] - 2026-10-29
 
