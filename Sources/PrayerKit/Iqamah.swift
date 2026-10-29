@@ -20,6 +20,17 @@ public struct IqamahTimes: Codable, Equatable {
         set { byPrayer["\(prayer)"] = newValue }
     }
 
+    /// Fridays only: the Jumu'ah prayer, used instead of Dhuhr's iqamah, and the khutbah before it.
+    public var jumuah: Iqamah? {
+        get { byPrayer["jumuah"] }
+        set { byPrayer["jumuah"] = newValue }
+    }
+
+    public var khutbah: Iqamah? {
+        get { byPrayer["khutbah"] }
+        set { byPrayer["khutbah"] = newValue }
+    }
+
     public var isEmpty: Bool { byPrayer.isEmpty }
 }
 
@@ -32,9 +43,26 @@ extension UserDefaults {
 }
 
 extension PrayerSchedule {
+    /// Whether `prayer` is Jumu'ah: Dhuhr on a Friday in the schedule's time zone.
+    public func isJumuah(_ prayer: Prayer, on date: Date) -> Bool {
+        prayer == .dhuhr && calendar.component(.weekday, from: date) == 6
+    }
+
     /// The iqamah for `prayer` on the day containing `date`, or nil if it has none that day.
+    /// On Fridays, Dhuhr's is the Jumu'ah time if one is set.
     public func iqamah(for prayer: Prayer, on date: Date) -> Date? {
-        guard let setting = iqamahTimes[prayer], let adhan = times(on: date)?.time(for: prayer) else { return nil }
+        let setting = isJumuah(prayer, on: date) ? iqamahTimes.jumuah ?? iqamahTimes[prayer] : iqamahTimes[prayer]
+        return setting.flatMap { time(of: $0, after: prayer, on: date) }
+    }
+
+    /// The khutbah on the Friday containing `date`, or nil on other days or if none is set.
+    public func khutbah(on date: Date) -> Date? {
+        guard isJumuah(.dhuhr, on: date) else { return nil }
+        return iqamahTimes.khutbah.flatMap { time(of: $0, after: .dhuhr, on: date) }
+    }
+
+    private func time(of setting: Iqamah, after prayer: Prayer, on date: Date) -> Date? {
+        guard let adhan = times(on: date)?.time(for: prayer) else { return nil }
         switch setting {
         case let .afterAdhan(minutes):
             return adhan.addingTimeInterval(Double(minutes) * 60)

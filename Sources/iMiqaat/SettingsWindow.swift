@@ -142,22 +142,32 @@ private enum IqamahKind: Hashable {
 extension SettingsView {
     var iqamah: some View {
         Form {
+            let times: ReferenceWritableKeyPath<UserDefaults, IqamahTimes> = \.iqamahTimes
             Section {
                 ForEach([Prayer.fajr, .dhuhr, .asr, .maghrib, .isha], id: \.self) { prayer in
-                    iqamahRows(for: prayer)
+                    iqamahRows(prayer.name, times.appending(path: \IqamahTimes.[prayer]), after: prayer)
                 }
             } footer: {
                 Text("A fixed time is skipped on days when it comes before the adhan.")
+                    .foregroundColor(.secondary)
+            }
+            Section {
+                iqamahRows("Khutbah", times.appending(path: \.khutbah), after: .dhuhr)
+                iqamahRows("Jumu'ah", times.appending(path: \.jumuah), after: .dhuhr)
+            } header: {
+                Text("Fridays")
+            } footer: {
+                Text("On Fridays, Dhuhr shows as Jumu'ah, using these times if they're set.")
                     .foregroundColor(.secondary)
             }
         }
         .formStyle(.grouped)
     }
 
+    /// Off, minutes after `prayer`'s adhan, or a fixed time, for one iqamah setting.
     @ViewBuilder
-    private func iqamahRows(for prayer: Prayer) -> some View {
-        let times: ReferenceWritableKeyPath<UserDefaults, IqamahTimes> = \.iqamahTimes
-        let setting = settings.binding(times.appending(path: \IqamahTimes.[prayer]))
+    private func iqamahRows(_ title: String, _ path: ReferenceWritableKeyPath<UserDefaults, Iqamah?>, after prayer: Prayer) -> some View {
+        let setting = settings.binding(path)
         // Today's schedule, from the chosen city or the last known location, to suggest and check times.
         let schedule = settings.defaults.prayerSchedule(deviceCoordinates: settings.defaults.cachedCoordinates)
         let adhan = schedule?.times(on: Date())?.time(for: prayer)
@@ -183,7 +193,7 @@ extension SettingsView {
                 }
             }
         )
-        Picker(prayer.name, selection: kind) {
+        Picker(title, selection: kind) {
             Text("Off").tag(IqamahKind.off)
             Text("After the adhan").tag(IqamahKind.afterAdhan)
             Text("At a fixed time").tag(IqamahKind.fixed)
@@ -202,7 +212,7 @@ extension SettingsView {
                 }
             )
             DatePicker("Time", selection: time, displayedComponents: .hourAndMinute)
-            if adhan != nil, schedule?.iqamah(for: prayer, on: Date()) == nil {
+            if let adhan, let schedule, isBefore(hour: hour, minute: minute, adhan, in: schedule.timeZone) {
                 Text("Today this is before the adhan, so it's skipped today.")
                     .foregroundColor(.orange)
             }
@@ -210,6 +220,13 @@ extension SettingsView {
             EmptyView()
         }
     }
+}
+
+/// Whether `hour:minute` today, in `timeZone`, comes before `adhan`.
+private func isBefore(hour: Int, minute: Int, _ adhan: Date, in timeZone: TimeZone) -> Bool {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = timeZone
+    return calendar.date(bySettingHour: hour, minute: minute, second: 0, of: adhan).map { $0 < adhan } ?? false
 }
 
 extension Prayer {

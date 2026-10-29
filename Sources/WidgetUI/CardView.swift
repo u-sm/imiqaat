@@ -40,12 +40,18 @@ private struct PrayerTimesView: View {
 
     var body: some View {
         if let today = schedule.times(on: now), let next = schedule.next(after: now) {
-            // Between an adhan and its iqamah, count down to the iqamah instead.
+            // Between an adhan and its iqamah, count down to the iqamah instead, and on Fridays
+            // to the khutbah first.
             let pending = schedule.pendingIqamah(at: now)
+            let khutbah = schedule.khutbah(on: now).flatMap { today.dhuhr <= now && now < $0 ? $0 : nil }
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(pending.map { "\($0.prayer.name) iqamah in \(countdown(to: $0.time))" } ?? "\(next.prayer.name) in \(countdown(to: next.time))")
-                        .font(.title2.bold())
+                    Text(
+                        khutbah.map { "Khutbah in \(countdown(to: $0))" }
+                            ?? pending.map { "\(schedule.name(of: $0.prayer, on: now)) iqamah in \(countdown(to: $0.time))" }
+                            ?? "\(schedule.name(of: next.prayer, on: next.time)) in \(countdown(to: next.time))"
+                    )
+                    .font(.title2.bold())
                     Text(hijriDate)
                         .foregroundStyle(.secondary)
                 }
@@ -61,9 +67,9 @@ private struct PrayerTimesView: View {
                     }
                     ForEach(Prayer.allCases, id: \.self) { prayer in
                         // After Isha the next prayer is tomorrow's Fajr, so match on time, not name.
-                        let isNext = pending.map { $0.prayer == prayer } ?? (today.time(for: prayer) == next.time)
+                        let isNext = khutbah != nil ? prayer == .dhuhr : pending.map { $0.prayer == prayer } ?? (today.time(for: prayer) == next.time)
                         HStack {
-                            Text(prayer.name)
+                            Text(schedule.name(of: prayer, on: now))
                             Spacer()
                             Text(clock(today.time(for: prayer)))
                             if !schedule.iqamahTimes.isEmpty {
@@ -103,5 +109,12 @@ private struct PrayerTimesView: View {
 extension Prayer {
     public var name: String {
         "\(self)".capitalized
+    }
+}
+
+extension PrayerSchedule {
+    /// The prayer's name on the day containing `date`: Dhuhr is Jumu'ah on Fridays.
+    public func name(of prayer: Prayer, on date: Date) -> String {
+        isJumuah(prayer, on: date) ? "Jumu'ah" : prayer.name
     }
 }

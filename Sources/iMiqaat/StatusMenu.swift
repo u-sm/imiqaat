@@ -53,7 +53,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
             return
         }
         // In the schedule's time zone, which is the chosen city's if there is one.
-        item.button?.title = "\(next.prayer.name) \(next.time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))"
+        item.button?.title = "\(schedule.name(of: next.prayer, on: next.time)) \(next.time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))"
     }
 
     // Rebuilt on every open, so the ticks always match the saved settings.

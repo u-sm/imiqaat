@@ -67,3 +67,27 @@ func makkahWithIqamah(_ prayer: Prayer, _ iqamah: Iqamah) -> PrayerSchedule {
     #expect(schedule.pendingIqamah(at: makkahTime(2016, 2, 4, 15, 40)) == nil)
     #expect(schedule.pendingIqamah(at: makkahTime(2016, 2, 4, 16, 30)) == nil)
 }
+
+// 4 February 2016 was a Thursday, so 5 February was a Friday.
+@Test func jumuahIsDhuhrOnFridayInTheLocationsTimeZone() throws {
+    // 21:30 UTC on Thursday is already 00:30 on Friday in Makkah.
+    let fridayInMakkah = try #require(ISO8601DateFormatter().date(from: "2016-02-04T21:30:00Z"))
+    #expect(makkah.isJumuah(.dhuhr, on: fridayInMakkah))
+    #expect(!makkah.isJumuah(.asr, on: fridayInMakkah))
+    #expect(!makkah.isJumuah(.dhuhr, on: makkahTime(2016, 2, 4, 23, 30)))
+}
+
+@Test func jumuahTimeReplacesDhuhrsIqamahOnFridaysOnly() {
+    var schedule = makkahWithIqamah(.dhuhr, .afterAdhan(minutes: 10))
+    schedule.iqamahTimes.jumuah = .fixed(hour: 13, minute: 15)
+    #expect(schedule.iqamah(for: .dhuhr, on: makkahTime(2016, 2, 5, 9, 0)) == makkahTime(2016, 2, 5, 13, 15))
+    let thursday = makkahTime(2016, 2, 4, 9, 0)
+    #expect(schedule.iqamah(for: .dhuhr, on: thursday) == schedule.times(on: thursday)?.dhuhr.addingTimeInterval(10 * 60))
+}
+
+@Test func khutbahIsOnFridaysOnly() {
+    var schedule = makkah
+    schedule.iqamahTimes.khutbah = .fixed(hour: 12, minute: 45)
+    #expect(schedule.khutbah(on: makkahTime(2016, 2, 5, 9, 0)) == makkahTime(2016, 2, 5, 12, 45))
+    #expect(schedule.khutbah(on: makkahTime(2016, 2, 4, 9, 0)) == nil)
+}
