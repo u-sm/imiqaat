@@ -8,8 +8,6 @@ struct AppIcon: View {
     let simplified: Bool
 
     private static let tile = Path(roundedRect: CGRect(x: 100, y: 100, width: 824, height: 824), cornerRadius: 185.4, style: .continuous)
-    private static let sky = Gradient(colors: [color(0x101538), color(0x332C6E), color(0x9A4F7A), color(0xF0965A)])
-    private static let sun = color(0xFFD36E)
 
     var body: some View {
         Canvas { context, size in
@@ -19,7 +17,7 @@ struct AppIcon: View {
                 shadow.fill(Self.tile, with: .color(.black))
             }
             context.clip(to: Self.tile)
-            context.fill(Self.tile, with: .linearGradient(Self.sky, startPoint: CGPoint(x: 512, y: 100), endPoint: CGPoint(x: 512, y: 924)))
+            context.fill(Self.tile, with: .linearGradient(sky, startPoint: CGPoint(x: 512, y: 100), endPoint: CGPoint(x: 512, y: 924)))
 
             // The arc is a circle around a point on the horizon; angles are in degrees above it.
             let center = CGPoint(x: 512, y: 640), radius = 320.0
@@ -44,17 +42,21 @@ struct AppIcon: View {
             let asr = point(42), sunRadius = simplified ? 84.0 : 40
             context.drawLayer { glow in
                 glow.addFilter(.blur(radius: sunRadius * 1.2))
-                glow.fill(circle(asr, sunRadius * 2.2), with: .color(Self.sun.opacity(0.7)))
+                glow.fill(circle(asr, sunRadius * 2.2), with: .color(sun.opacity(0.7)))
             }
-            context.fill(circle(asr, sunRadius), with: .color(Self.sun))
+            context.fill(circle(asr, sunRadius), with: .color(sun))
         }
     }
 
     private func circle(_ center: CGPoint, _ radius: Double) -> Path {
         Path(ellipseIn: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
     }
+}
 
-    private static func color(_ hex: UInt32) -> Color {
-        Color(red: Double(hex >> 16 & 0xFF) / 255, green: Double(hex >> 8 & 0xFF) / 255, blue: Double(hex & 0xFF) / 255)
-    }
+/// The icon's palette, shared with the DMG background.
+let sky = Gradient(colors: [color(0x101538), color(0x332C6E), color(0x9A4F7A), color(0xF0965A)])
+let sun = color(0xFFD36E)
+
+func color(_ hex: UInt32) -> Color {
+    Color(red: Double(hex >> 16 & 0xFF) / 255, green: Double(hex >> 8 & 0xFF) / 255, blue: Double(hex & 0xFF) / 255)
 }

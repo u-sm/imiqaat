@@ -7,8 +7,8 @@ import WidgetUI
 
 // Renders the project's images from the real views, so they can be regenerated with one command.
 let arguments = Array(CommandLine.arguments.dropFirst())
-guard arguments.count == 2, ["icon", "screenshots"].contains(arguments[0]) else {
-    FileHandle.standardError.write(Data("usage: swift run Artwork <icon|screenshots> <output dir>\n".utf8))
+guard arguments.count == 2, ["dmg", "icon", "screenshots"].contains(arguments[0]) else {
+    FileHandle.standardError.write(Data("usage: swift run Artwork <dmg|icon|screenshots> <output dir>\n".utf8))
     exit(64)
 }
 let output = URL(fileURLWithPath: arguments[1], isDirectory: true)
@@ -32,7 +32,25 @@ func render(_ view: some View, to url: URL, scale: CGFloat) {
     guard CGImageDestinationFinalize(destination) else { fail("can't write \(url.path)") }
 }
 
+/// Runs a command-line tool and stops if it fails.
+func run(_ tool: String, _ arguments: [String]) throws {
+    let process = try Process.run(URL(fileURLWithPath: tool), arguments: arguments)
+    process.waitUntilExit()
+    guard process.terminationStatus == 0 else { fail("\(tool) failed") }
+}
+
 switch arguments[0] {
+case "dmg":
+    // tiffutil combines the 1x and 2x images, so Finder picks the sharp one on Retina screens.
+    let temporary = FileManager.default.temporaryDirectory
+    let images = [1, 2].map { temporary.appendingPathComponent("dmg-background-\($0)x.png") }
+    for (scale, url) in zip([1.0, 2.0], images) {
+        render(DMGBackground(), to: url, scale: scale)
+    }
+    let tiff = output.appendingPathComponent("background.tiff")
+    try run("/usr/bin/tiffutil", ["-cathidpicheck", images[0].path, images[1].path, "-out", tiff.path])
+    print(tiff.path)
+
 case "icon":
     // An .iconset holds each size at 1x and 2x; iconutil packs it into AppIcon.icns.
     let iconset = FileManager.default.temporaryDirectory.appendingPathComponent("AppIcon.iconset")
@@ -46,9 +64,7 @@ case "icon":
         }
     }
     let icns = output.appendingPathComponent("AppIcon.icns")
-    let iconutil = try Process.run(URL(fileURLWithPath: "/usr/bin/iconutil"), arguments: ["-c", "icns", iconset.path, "-o", icns.path])
-    iconutil.waitUntilExit()
-    guard iconutil.terminationStatus == 0 else { fail("iconutil failed") }
+    try run("/usr/bin/iconutil", ["-c", "icns", iconset.path, "-o", icns.path])
     print(icns.path)
 
 default:

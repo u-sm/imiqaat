@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - An app icon, and a matching symbol next to the next prayer in the menu bar.
+- A designed install window in the DMG, showing where to drag the app and how to open it the first time.
 - JAKIM (Malaysia) as a calculation method, matching the official e-Solat timetables to within a minute or two.
 
 ### Fixed
