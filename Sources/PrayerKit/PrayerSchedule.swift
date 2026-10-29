@@ -45,6 +45,12 @@ public struct PrayerSchedule {
         return (.fajr, tomorrow.fajr)
     }
 
+    /// A time as a clock in the schedule's time zone shows it, for example "15:55". That is the
+    /// chosen city's time zone if there is one, so its times don't follow the Mac's clock.
+    public func clock(_ date: Date) -> String {
+        date.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: timeZone))
+    }
+
     /// The Umm al-Qura Hijri date. The Islamic day begins at Maghrib, so from Maghrib
     /// onwards this is the next day's date.
     public func hijriDate(at date: Date) -> DateComponents {

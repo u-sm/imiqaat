@@ -15,7 +15,7 @@ struct LockScreenScene: View {
             VStack(spacing: 0) {
                 Text(now.formatted(Date.FormatStyle(timeZone: schedule.timeZone).weekday(.wide).day().month(.wide)))
                     .font(.system(size: 18, weight: .semibold))
-                Text(now.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))
+                Text(schedule.clock(now))
                     .font(.system(size: 96, weight: .semibold, design: .rounded))
             }
             .foregroundColor(.white.opacity(0.9))
@@ -36,8 +36,8 @@ struct MenuBarScene: View {
     var body: some View {
         HStack(spacing: 4) {
             Image(nsImage: menuBarSymbol)
-            if let next = schedule.next(after: now) {
-                Text("\(next.prayer.name) \(next.time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))")
+            if let title = schedule.menuBarTitle(at: now) {
+                Text(title)
             }
         }
         .font(.system(size: 13))

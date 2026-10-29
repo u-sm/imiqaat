@@ -81,3 +81,15 @@ func makkahTime(_ year: Int, _ month: Int, _ day: Int, _ hour: Int, _ minute: In
         #expect(difference <= 120, "\(prayer)")
     }
 }
+
+@Test func clockUsesTheSchedulesTimeZoneNotTheMacs() throws {
+    // 03:00 in London is 12:00 in Tokyo, whatever time zone the Mac is in.
+    let moment = try #require(ISO8601DateFormatter().date(from: "2026-01-15T03:00:00Z"))
+    func schedule(_ zone: String) -> PrayerSchedule {
+        PrayerSchedule(coordinates: makkah.coordinates, parameters: makkah.parameters, timeZone: TimeZone(identifier: zone)!)
+    }
+    // The format follows the Mac's 12- or 24-hour setting, so check the hour only.
+    let london = schedule("Europe/London").clock(moment), tokyo = schedule("Asia/Tokyo").clock(moment)
+    #expect(london.contains("3") && !london.contains("12"), "\(london)")
+    #expect(tokyo.contains("12"), "\(tokyo)")
+}
