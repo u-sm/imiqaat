@@ -78,7 +78,7 @@ v0.0–v0.4 were released as the **0.1.0** pre-release, and v0.5 as **0.5.0**.
 
 | Milestone | Issues | Why in this order |
 |---|---|---|
-| **v0.6 Accurate times** | Settings window (#30) · per-prayer adjustments (#31) · Hijri adjustment (#32) · choose a city (#33) · iqamah times (#34) · Jumu'ah (#35) | Times that match the user's mosque are what make the app trustworthy. The Settings window comes first because the rest need number and time input. |
+| **v0.6 Accurate times** | Settings window (#30) · per-prayer adjustments (#31) · Hijri adjustment (#32) · choose a city (#33) · iqamah times (#34) · Jumu'ah (#35) · from an audit: one tested time format (#75), city search feedback (#76), location rule in one place (#77), unused card images (#78), submenu helper (#79) | Times that match the user's mosque are what make the app trustworthy. The Settings window comes first because the rest need number and time input. The audit fixes close the milestone, because they guard and tidy the code it added. |
 | **v0.7 Reminders** | Notifications (#36) · adhan audio (#37) · pause media (#38) | Builds on accurate times and iqamah, so reminders fire at the right moments. |
 | **v0.8 Widget options** | Placement (#39) · compact card (#40) · glass style (#41) · hide on Lock Screen (#42) · menu-bar countdown (#43) · accessibility (#44) | Visual options, best designed once the card's content (iqamah, Jumu'ah) has settled. |
 | **v0.9 Islamic calendar** | Sunnah times (#45) · forbidden times (#46) · Ramadan mode (#47) · upcoming Islamic dates (#48) | Depends on the Hijri adjustment (#32) and reminders (#36). |
