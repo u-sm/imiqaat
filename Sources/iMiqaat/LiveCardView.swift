@@ -23,7 +23,38 @@ struct LiveCardView: View {
                 CardView(.findingLocation)
             }
         }
-        // The window is taller than the card; keep the card in its bottom-left corner.
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+        // The window covers the screen; the card sits in the chosen corner.
+        .padding(settings.defaults.cardMargin.points)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: settings.defaults.cardPosition.alignment)
+    }
+}
+
+extension CardPosition {
+    var alignment: Alignment {
+        switch self {
+        case .bottomLeft: .bottomLeading
+        case .bottomRight: .bottomTrailing
+        case .topLeft: .topLeading
+        case .topRight: .topTrailing
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .bottomLeft: "Bottom Left"
+        case .bottomRight: "Bottom Right"
+        case .topLeft: "Top Left"
+        case .topRight: "Top Right"
+        }
+    }
+}
+
+extension CardMargin {
+    var points: CGFloat {
+        switch self {
+        case .small: 24
+        case .medium: 48
+        case .large: 96
+        }
     }
 }

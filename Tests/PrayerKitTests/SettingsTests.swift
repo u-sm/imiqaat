@@ -17,6 +17,14 @@ import Testing
     #expect(!defaults.showOnLockScreen)
 }
 
+@Test func cardSitsBottomLeftUntilMoved() {
+    let defaults = emptyDefaults()
+    #expect(defaults.cardPosition == .bottomLeft && defaults.cardMargin == .medium)
+    defaults.cardPosition = .topRight
+    defaults.cardMargin = .large
+    #expect(defaults.cardPosition == .topRight && defaults.cardMargin == .large)
+}
+
 @Test func cardIsFullUntilChanged() {
     let defaults = emptyDefaults()
     #expect(defaults.cardStyle == .full)

@@ -35,6 +35,17 @@ public enum CardStyle: String, CaseIterable {
     case full, compact
 }
 
+/// Which corner of the Lock Screen the card sits in. The corners stay clear of the clock at the
+/// top and the login controls at the bottom.
+public enum CardPosition: String, CaseIterable {
+    case bottomLeft, bottomRight, topLeft, topRight
+}
+
+/// How far the card sits from the screen's edges.
+public enum CardMargin: String, CaseIterable {
+    case small, medium, large
+}
+
 /// What the menu-bar item shows beside its symbol.
 public enum MenuBarStyle: String, CaseIterable {
     case time, countdown, iconOnly
@@ -78,6 +89,18 @@ extension UserDefaults {
     public var cardStyle: CardStyle {
         get { string(forKey: "cardStyle").flatMap(CardStyle.init) ?? .full }
         set { set(newValue.rawValue, forKey: "cardStyle") }
+    }
+
+    /// Defaults to the bottom-left corner.
+    public var cardPosition: CardPosition {
+        get { string(forKey: "cardPosition").flatMap(CardPosition.init) ?? .bottomLeft }
+        set { set(newValue.rawValue, forKey: "cardPosition") }
+    }
+
+    /// Defaults to medium.
+    public var cardMargin: CardMargin {
+        get { string(forKey: "cardMargin").flatMap(CardMargin.init) ?? .medium }
+        set { set(newValue.rawValue, forKey: "cardMargin") }
     }
 
     /// Defaults to the next prayer's time.
