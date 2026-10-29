@@ -9,6 +9,15 @@ struct LiveCardView: View {
     @ObservedObject var settings: Settings
 
     var body: some View {
+        // The window covers the screen, so its height places the centered positions.
+        GeometryReader { screen in
+            card
+                .padding(settings.defaults.cardPosition.padding(settings.defaults.cardMargin, screenHeight: screen.size.height))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: settings.defaults.cardPosition.alignment)
+        }
+    }
+
+    private var card: some View {
         Group {
             // A cached fix may be out of date, so don't use it once access is revoked.
             if let schedule = settings.defaults.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates) {
@@ -23,9 +32,6 @@ struct LiveCardView: View {
                 CardView(.findingLocation, textSize: settings.defaults.cardTextSize)
             }
         }
-        // The window covers the screen; the card sits in the chosen corner.
-        .padding(settings.defaults.cardMargin.points)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: settings.defaults.cardPosition.alignment)
     }
 }
 
@@ -36,6 +42,20 @@ extension CardPosition {
         case .bottomRight: .bottomTrailing
         case .topLeft: .topLeading
         case .topRight: .topTrailing
+        case .centerHigh: .top
+        case .center: .center
+        case .centerLow: .bottom
+        }
+    }
+
+    /// The space around the card: the margin in a corner. Centered high and low, a share of the screen's
+    /// height that clears the Lock Screen's clock above or its login controls below.
+    func padding(_ margin: CardMargin, screenHeight: CGFloat) -> EdgeInsets {
+        switch self {
+        case .centerHigh: EdgeInsets(top: screenHeight * 0.28, leading: 0, bottom: 0, trailing: 0)
+        case .center: EdgeInsets()
+        case .centerLow: EdgeInsets(top: 0, leading: 0, bottom: screenHeight * 0.26, trailing: 0)
+        default: EdgeInsets(top: margin.points, leading: margin.points, bottom: margin.points, trailing: margin.points)
         }
     }
 
@@ -45,6 +65,9 @@ extension CardPosition {
         case .bottomRight: "Bottom Right"
         case .topLeft: "Top Left"
         case .topRight: "Top Right"
+        case .centerHigh: "Center High"
+        case .center: "Center"
+        case .centerLow: "Center Low"
         }
     }
 }
