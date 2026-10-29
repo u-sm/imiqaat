@@ -6,15 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-29
+
+Your card, your way: frosted glass, a compact style, any corner of the Lock Screen, larger text, and a countdown in the menu bar.
+
 ### Added
 
 - On macOS 26 and later, the card is frosted glass over the Lock Screen wallpaper, like system widgets. With Reduce Transparency or Increase Contrast on, it's a solid dark card instead.
+- A new **Card** tab in Settings:
+  - **Style:** the full card, or a compact one with only the next prayer's countdown and time, and the Hijri date.
+  - **Text size:** Standard, Large or Extra Large.
+  - **Position** and **Margin:** any corner of the Lock Screen, and how far from the edges.
 - **Show on Lock Screen** in the menu, on by default. Turn it off to keep only the menu-bar times.
-- A text size for the card, on the Card tab of Settings: Standard, Large or Extra Large.
-- VoiceOver reads each of the card's rows as one item, such as "Asr, 15:55, iqamah 16:15, next prayer", and the countdown in words.
-- Choose where the card sits on the Lock Screen, in any corner, and how far from the edges, on the Card tab of Settings.
-- A compact card style, on the new Card tab of Settings: only the next prayer's countdown and time, and the Hijri date.
 - **Menu Bar Shows** in the menu: the next prayer's time, a countdown like the card's ("Asr in 1h 12m"), or the icon only.
+- VoiceOver reads each of the card's rows as one item, such as "Asr, 15:55, iqamah 16:15, next prayer", and the countdown in words.
 
 ### Fixed
 
@@ -76,7 +81,8 @@ The first pre-release.
 - A Launch at Login option.
 - If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
 
-[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/u-sm/imiqaat/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/u-sm/imiqaat/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/u-sm/imiqaat/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/u-sm/imiqaat/compare/v0.1.0...v0.5.0
