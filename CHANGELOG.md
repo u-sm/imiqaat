@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - Reminders sent the old text after a change that kept their times, such as a new iqamah time or switching between 12- and 24-hour time. They're now sent again with the new text.
+- The Sunrise reminder offers "At sunrise" instead of "At the adhan".
 
 ## [0.8.0] - 2026-10-29
 

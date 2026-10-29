@@ -308,7 +308,7 @@ extension SettingsView {
             let path: ReferenceWritableKeyPath<UserDefaults, Reminders> = \.reminders
             Section {
                 ForEach(Prayer.allCases, id: \.self) { prayer in
-                    reminderPicker(prayer.name, path.appending(path: \Reminders.[prayer]), minutes: [0, 5, 10, 15, 30])
+                    reminderPicker(prayer.name, path.appending(path: \Reminders.[prayer]), minutes: [0, 5, 10, 15, 30], atTime: prayer == .sunrise ? "At sunrise" : "At the adhan")
                 }
                 reminderPicker("Before the iqamah", path.appending(path: \.beforeIqamah), minutes: [5, 10, 15])
             } footer: {
@@ -319,11 +319,11 @@ extension SettingsView {
         .formStyle(.grouped)
     }
 
-    /// Off, or a number of minutes before; 0 reads "At the adhan".
-    private func reminderPicker(_ title: String, _ path: ReferenceWritableKeyPath<UserDefaults, Int?>, minutes: [Int]) -> some View {
+    /// Off, or a number of minutes before; 0 reads `atTime`.
+    private func reminderPicker(_ title: String, _ path: ReferenceWritableKeyPath<UserDefaults, Int?>, minutes: [Int], atTime: String = "") -> some View {
         Picker(title, selection: settings.binding(path)) {
             Text("Off").tag(Int?.none)
-            ForEach(minutes, id: \.self) { Text($0 == 0 ? "At the adhan" : "\($0) min before").tag(Int?.some($0)) }
+            ForEach(minutes, id: \.self) { Text($0 == 0 ? atTime : "\($0) min before").tag(Int?.some($0)) }
         }
     }
 }
