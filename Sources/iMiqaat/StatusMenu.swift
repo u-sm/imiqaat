@@ -61,6 +61,20 @@ final class StatusMenu: NSObject, NSMenuDelegate {
             menu.addItem(withTitle: "Lock Screen widget unavailable on this macOS version", action: nil, keyEquivalent: "")
             menu.addItem(.separator())
         }
+        if let schedule = defaults.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates) {
+            // Items without an action show greyed out, as information.
+            let dates = schedule.upcomingIslamicDates(from: Date()).map { upcoming in
+                let when = switch upcoming.inDays {
+                case 0: "today"
+                case 1: "tomorrow"
+                default: "in \(upcoming.inDays) days"
+                }
+                let day = upcoming.day.formatted(Date.FormatStyle(timeZone: schedule.timeZone).weekday(.abbreviated).day().month(.abbreviated))
+                return NSMenuItem(title: "\(upcoming.date.name) — \(when) (\(day))", action: nil, keyEquivalent: "")
+            }
+            menu.addItem(submenu("Upcoming Dates", dates + [.separator(), NSMenuItem(title: "Dates depend on moon sighting.", action: nil, keyEquivalent: "")]))
+            menu.addItem(.separator())
+        }
         // Quick access to the method; the other settings are in the Settings window.
         menu.addItem(submenu("Calculation Method", PrayerMethod.allCases.map { method in
             ActionItem(method.title, isOn: defaults.calculationMethod == method) { defaults.calculationMethod = method }

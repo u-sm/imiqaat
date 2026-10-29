@@ -82,6 +82,9 @@ private struct PrayerTimesView: View {
                     // Compact keeps only this: the time it counts down to, and the Hijri date.
                     Text(style == .compact ? "\(schedule.clock(countdown.time)) · \(hijriDate)" : hijriDate)
                         .foregroundStyle(.secondary)
+                    if let greeting {
+                        Text(greeting).foregroundStyle(.secondary)
+                    }
                 }
                 if style == .full {
                     VStack(spacing: 4) {
@@ -141,6 +144,16 @@ private struct PrayerTimesView: View {
             }
         } else {
             Text("Prayer times can't be calculated here.")
+        }
+    }
+
+    /// The line under the Hijri date on an Islamic date: "Eid Mubarak", or the day's name. It
+    /// follows the Hijri date shown, so it begins at Maghrib the evening before. Not for Ramadan.
+    private var greeting: String? {
+        switch IslamicDate(schedule.hijriDate(at: now)) {
+        case .eidAlFitr, .eidAlAdha: "Eid Mubarak"
+        case .ramadan, nil: nil
+        case let date?: date.name
         }
     }
 
