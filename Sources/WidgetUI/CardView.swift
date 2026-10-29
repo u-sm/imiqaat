@@ -12,12 +12,18 @@ public struct CardView: View {
 
     let content: Content
     let style: CardStyle
+    let scale: CGFloat
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
 
-    public init(_ content: Content, style: CardStyle = .full) {
+    public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard) {
         self.content = content
         self.style = style
+        scale = switch textSize {
+        case .standard: 1
+        case .large: 1.25
+        case .extraLarge: 1.5
+        }
     }
 
     public var body: some View {
@@ -28,12 +34,13 @@ public struct CardView: View {
             case .findingLocation:
                 Text("Finding your location…")
             case let .times(schedule, now):
-                PrayerTimesView(schedule: schedule, now: now, style: style)
+                PrayerTimesView(schedule: schedule, now: now, style: style, scale: scale)
             }
         }
+        .font(scaled(.body, 13, by: scale))
         .foregroundStyle(.white)
-        .padding(20)
-        .frame(width: 280, alignment: .leading)
+        .padding(20 * scale)
+        .frame(width: 280 * scale, alignment: .leading)
         .background { background }
     }
 
@@ -60,13 +67,15 @@ private struct PrayerTimesView: View {
     let schedule: PrayerSchedule
     let now: Date
     let style: CardStyle
+    let scale: CGFloat
 
     var body: some View {
         if let today = schedule.times(on: now), let countdown = schedule.countdown(at: now) {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(schedule.headline(at: now) ?? "")
-                        .font(.title2.bold())
+                        .font(scaled(.title2, 17, by: scale).bold())
+                        .accessibilityLabel(schedule.headline(at: now, width: .wide) ?? "")
                     // Compact keeps only this: the time it counts down to, and the Hijri date.
                     Text(style == .compact ? "\(schedule.clock(countdown.time)) · \(hijriDate)" : hijriDate)
                         .foregroundStyle(.secondary)
@@ -77,25 +86,35 @@ private struct PrayerTimesView: View {
                             HStack {
                                 Spacer()
                                 Text("Adhan")
-                                Text("Iqamah").frame(width: 56, alignment: .trailing)
+                                Text("Iqamah").frame(width: 56 * scale, alignment: .trailing)
                             }
-                            .font(.caption)
+                            .font(scaled(.caption, 10, by: scale))
                             .foregroundStyle(.secondary)
+                            // Each row names its iqamah for VoiceOver.
+                            .accessibilityHidden(true)
                         }
                         ForEach(Prayer.allCases, id: \.self) { prayer in
                             let isNext = prayer == countdown.row
+                            let iqamah = schedule.iqamah(for: prayer, on: now).map(schedule.clock)
                             HStack {
                                 Text(schedule.name(of: prayer, on: now))
                                 Spacer()
                                 Text(schedule.clock(today.time(for: prayer)))
                                 if !schedule.iqamahTimes.isEmpty {
                                     // The iqamah column, blank for prayers without one.
-                                    Text(schedule.iqamah(for: prayer, on: now).map(schedule.clock) ?? "")
-                                        .frame(width: 56, alignment: .trailing)
+                                    Text(iqamah ?? "")
+                                        .frame(width: 56 * scale, alignment: .trailing)
                                 }
                             }
                             .fontWeight(isNext ? .bold : .regular)
                             .foregroundStyle(isNext ? .primary : .secondary)
+                            // One element per row for VoiceOver: "Asr, 15:55, iqamah 16:15, next prayer".
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityAddTraits(.isStaticText)
+                            .accessibilityLabel(
+                                [schedule.name(of: prayer, on: now), schedule.clock(today.time(for: prayer)), iqamah.map { "iqamah \($0)" }, isNext ? "next prayer" : nil]
+                                    .compactMap { $0 }.joined(separator: ", ")
+                            )
                         }
                     }
                 }
@@ -110,6 +129,12 @@ private struct PrayerTimesView: View {
         guard let day = date.day, let month = date.month, let year = date.year else { return "" }
         return "\(day) \(Calendar(identifier: .islamicUmmAlQura).monthSymbols[month - 1]) \(year) AH"
     }
+}
+
+/// A text style at the standard size, so the card lays out exactly as macOS's styles do, or the
+/// style's macOS point size scaled up. macOS has no Dynamic Type to do this.
+private func scaled(_ style: Font.TextStyle, _ points: CGFloat, by scale: CGFloat) -> Font {
+    scale == 1 ? .system(style) : .system(size: points * scale)
 }
 
 extension Prayer {
@@ -140,10 +165,11 @@ extension PrayerSchedule {
 
     /// The card's headline, for example "Asr in 1h 12m": what `countdown(at:)` picks, with the
     /// time left rounded up to the minute so it never reads 0m before the prayer.
-    public func headline(at date: Date) -> String? {
+    /// `.wide` gives VoiceOver's form, "Asr in 1 hour, 12 minutes".
+    public func headline(at date: Date, width: Duration.UnitsFormatStyle.UnitWidth = .narrow) -> String? {
         countdown(at: date).map { countdown in
             let minutes = (countdown.time.timeIntervalSince(date) / 60).rounded(.up)
-            return "\(countdown.label) in \(Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: .narrow)))"
+            return "\(countdown.label) in \(Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: width)))"
         }
     }
 

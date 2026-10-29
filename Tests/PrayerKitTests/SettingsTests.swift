@@ -25,6 +25,13 @@ import Testing
     #expect(defaults.cardPosition == .topRight && defaults.cardMargin == .large)
 }
 
+@Test func cardTextIsStandardUntilChanged() {
+    let defaults = emptyDefaults()
+    #expect(defaults.cardTextSize == .standard)
+    defaults.cardTextSize = .extraLarge
+    #expect(defaults.cardTextSize == .extraLarge)
+}
+
 @Test func cardIsFullUntilChanged() {
     let defaults = emptyDefaults()
     #expect(defaults.cardStyle == .full)

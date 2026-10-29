@@ -282,6 +282,12 @@ extension SettingsView {
                     Text("Compact: only what's next").tag(CardStyle.compact)
                 }
                 .pickerStyle(.radioGroup)
+                Picker("Text size", selection: settings.binding(\.cardTextSize)) {
+                    Text("Standard").tag(CardTextSize.standard)
+                    Text("Large").tag(CardTextSize.large)
+                    Text("Extra Large").tag(CardTextSize.extraLarge)
+                }
+                .pickerStyle(.segmented)
                 Picker("Position", selection: settings.binding(\.cardPosition)) {
                     ForEach(CardPosition.allCases, id: \.self) { Text($0.title).tag($0) }
                 }

@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - On macOS 26 and later, the card is frosted glass over the Lock Screen wallpaper, like system widgets. With Reduce Transparency or Increase Contrast on, it's a solid dark card instead.
 - **Show on Lock Screen** in the menu, on by default. Turn it off to keep only the menu-bar times.
+- A text size for the card, on the Card tab of Settings: Standard, Large or Extra Large.
+- VoiceOver reads each of the card's rows as one item, such as "Asr, 15:55, iqamah 16:15, next prayer", and the countdown in words.
 - Choose where the card sits on the Lock Screen, in any corner, and how far from the edges, on the Card tab of Settings.
 - A compact card style, on the new Card tab of Settings: only the next prayer's countdown and time, and the Hijri date.
 - **Menu Bar Shows** in the menu: the next prayer's time, a countdown like the card's ("Asr in 1h 12m"), or the icon only.
