@@ -82,13 +82,14 @@ private final class CitySearch: ObservableObject {
 }
 
 private enum SettingsPage: CaseIterable {
-    case general, adjustments, iqamah, reminders
+    case general, card, adjustments, iqamah, reminders
 
     var title: String { "\(self)".capitalized }
 
     var symbol: String {
         switch self {
         case .general: "gearshape"
+        case .card: "lock.display"
         case .adjustments: "slider.horizontal.3"
         case .iqamah: "person.3"
         case .reminders: "bell"
@@ -105,6 +106,7 @@ private struct SettingsView: View {
         Group {
             switch page {
             case .general: general
+            case .card: card
             case .adjustments: adjustments
             case .iqamah: iqamah
             case .reminders: reminders
@@ -271,6 +273,23 @@ extension SettingsView {
 }
 
 extension SettingsView {
+    /// The Lock Screen card's look.
+    var card: some View {
+        Form {
+            Section {
+                Picker("Style", selection: settings.binding(\.cardStyle)) {
+                    Text("Full: today's times").tag(CardStyle.full)
+                    Text("Compact: only what's next").tag(CardStyle.compact)
+                }
+                .pickerStyle(.radioGroup)
+            } footer: {
+                Text("Compact shows the next prayer's countdown and time, and the Hijri date.")
+                    .foregroundColor(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+    }
+
     var reminders: some View {
         Form {
             let path: ReferenceWritableKeyPath<UserDefaults, Reminders> = \.reminders

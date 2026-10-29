@@ -30,6 +30,11 @@ public enum PrayerMethod: Hashable {
     }
 }
 
+/// How much the Lock Screen card shows: today's times, or only what's next.
+public enum CardStyle: String, CaseIterable {
+    case full, compact
+}
+
 /// What the menu-bar item shows beside its symbol.
 public enum MenuBarStyle: String, CaseIterable {
     case time, countdown, iconOnly
@@ -67,6 +72,12 @@ extension UserDefaults {
     public var showOnLockScreen: Bool {
         get { object(forKey: "showOnLockScreen") as? Bool ?? true }
         set { set(newValue, forKey: "showOnLockScreen") }
+    }
+
+    /// Defaults to the full card.
+    public var cardStyle: CardStyle {
+        get { string(forKey: "cardStyle").flatMap(CardStyle.init) ?? .full }
+        set { set(newValue.rawValue, forKey: "cardStyle") }
     }
 
     /// Defaults to the next prayer's time.
