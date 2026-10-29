@@ -5,7 +5,7 @@ import PrayerKit
 import ServiceManagement
 import WidgetUI
 
-/// The menu-bar item: the next prayer and its time, and a menu of calculation settings.
+/// The menu-bar item: the app's symbol with the next prayer and its time, and a menu of calculation settings.
 @MainActor
 final class StatusMenu: NSObject, NSMenuDelegate {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -21,6 +21,8 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         self.lockScreenAvailable = lockScreenAvailable
         self.settingsChanged = settingsChanged
         super.init()
+        item.button?.image = menuBarSymbol
+        item.button?.imagePosition = .imageLeading
         item.menu = NSMenu()
         item.menu?.delegate = self
         updateTitle()
@@ -48,7 +50,8 @@ final class StatusMenu: NSObject, NSMenuDelegate {
                 timeZone: .autoupdatingCurrent
             ).next(after: Date())
         else {
-            item.button?.title = "iMiqaat"
+            // The symbol alone; its accessibility description names the app.
+            item.button?.title = ""
             return
         }
         item.button?.title = "\(next.prayer.name) \(next.time.formatted(date: .omitted, time: .shortened))"
