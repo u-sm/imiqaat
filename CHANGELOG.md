@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- The Settings window's tabs were blurry on macOS 26 and later. They're now in the window's toolbar, with icons, like other Mac apps' Settings, and the window's title names the open tab.
+
 ## [0.7.0] - 2026-10-29
 
 Reminders: a notification at the prayers you choose, at the adhan or a few minutes before, and before the iqamah.

@@ -4,13 +4,28 @@ import MapKit
 import PrayerKit
 import SwiftUI
 
-/// The Settings window, opened from the menu. Created on first use and kept, so it reopens
-/// where the user left it.
+/// The Settings window, opened from the menu, with its tabs in the toolbar like macOS's own
+/// Settings windows. Created on first use and kept, so it reopens where the user left it.
 @MainActor
 final class SettingsWindow {
     private lazy var window: NSWindow = {
-        let window = NSWindow(contentViewController: NSHostingController(rootView: SettingsView(settings: Settings(), search: CitySearch())))
-        window.title = "iMiqaat Settings"
+        let settings = Settings(), search = CitySearch()
+        let tabs = NSTabViewController()
+        // Not SwiftUI's TabView: from the macOS 26 SDK its glass tab bar blurs the labels on 1x displays.
+        tabs.tabStyle = .toolbar
+        for page in SettingsPage.allCases {
+            let controller = NSHostingController(rootView: SettingsView(page: page, settings: settings, search: search))
+            // The window shows the selected tab's title, as macOS's own Settings windows do.
+            controller.title = page.title
+            // Report the form's size, so the window fits it rather than a 500-point default.
+            controller.sizingOptions = .preferredContentSize
+            let item = NSTabViewItem(viewController: controller)
+            item.label = page.title
+            item.image = NSImage(systemSymbolName: page.symbol, accessibilityDescription: nil)
+            tabs.addTabViewItem(item)
+        }
+        let window = NSWindow(contentViewController: tabs)
+        window.toolbarStyle = .preference
         window.styleMask = [.titled, .closable]
         window.isReleasedWhenClosed = false
         window.center()
@@ -66,20 +81,37 @@ private final class CitySearch: ObservableObject {
     }
 }
 
+private enum SettingsPage: CaseIterable {
+    case general, adjustments, iqamah, reminders
+
+    var title: String { "\(self)".capitalized }
+
+    var symbol: String {
+        switch self {
+        case .general: "gearshape"
+        case .adjustments: "slider.horizontal.3"
+        case .iqamah: "person.3"
+        case .reminders: "bell"
+        }
+    }
+}
+
 private struct SettingsView: View {
+    let page: SettingsPage
     @ObservedObject var settings: Settings
     @ObservedObject var search: CitySearch
 
     var body: some View {
-        TabView {
-            general.tabItem { Text("General") }
-            adjustments.tabItem { Text("Adjustments") }
-            iqamah.tabItem { Text("Iqamah") }
-            reminders.tabItem { Text("Reminders") }
+        Group {
+            switch page {
+            case .general: general
+            case .adjustments: adjustments
+            case .iqamah: iqamah
+            case .reminders: reminders
+            }
         }
-        // Grouped forms scroll, so they ask for no height; without one the window shrinks to the tab bar.
-        .frame(width: 460, height: 460)
-        .padding(.top, 8)
+        // Grouped forms scroll, so they ask for no height; without one the window shrinks to the toolbar.
+        .frame(width: 460, height: 430)
     }
 
     private var general: some View {
