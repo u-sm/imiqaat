@@ -23,6 +23,8 @@ import Testing
     defaults.cardPosition = .topRight
     defaults.cardMargin = .large
     #expect(defaults.cardPosition == .topRight && defaults.cardMargin == .large)
+    defaults.cardPosition = .centerLow
+    #expect(defaults.cardPosition == .centerLow && defaults.cardPosition.isCentered && !CardPosition.topRight.isCentered)
 }
 
 @Test func cardTextIsStandardUntilChanged() {

@@ -40,10 +40,13 @@ public enum CardTextSize: String, CaseIterable {
     case standard, large, extraLarge
 }
 
-/// Which corner of the Lock Screen the card sits in. The corners stay clear of the clock at the
-/// top and the login controls at the bottom.
+/// Where the card sits on the Lock Screen: a corner, or centered at one of three heights. All stay
+/// clear of the clock at the top and the login controls at the bottom.
 public enum CardPosition: String, CaseIterable {
-    case bottomLeft, bottomRight, topLeft, topRight
+    case bottomLeft, bottomRight, topLeft, topRight, centerHigh, center, centerLow
+
+    /// Centered positions keep their height whatever the margin.
+    public var isCentered: Bool { [.centerHigh, .center, .centerLow].contains(self) }
 }
 
 /// How far the card sits from the screen's edges.

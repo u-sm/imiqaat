@@ -295,6 +295,8 @@ extension SettingsView {
                     ForEach(CardMargin.allCases, id: \.self) { Text("\($0)".capitalized).tag($0) }
                 }
                 .pickerStyle(.segmented)
+                // The margin is the distance from a corner; centered positions don't use it.
+                .disabled(settings.defaults.cardPosition.isCentered)
             } footer: {
                 Text("Compact shows the next prayer's countdown and time, and the Hijri date.")
                     .foregroundColor(.secondary)
