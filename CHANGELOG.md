@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **Show on Lock Screen** in the menu, on by default. Turn it off to keep only the menu-bar times.
+
 ### Fixed
 
 - The Settings window's tabs were blurry on macOS 26 and later. They're now in the window's toolbar, with icons, like other Mac apps' Settings, and the window's title names the open tab.

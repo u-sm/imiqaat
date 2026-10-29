@@ -10,6 +10,13 @@ import Testing
     #expect(parameters.highLatitudeRule == nil)
 }
 
+@Test func cardShowsOnLockScreenUntilTurnedOff() {
+    let defaults = emptyDefaults()
+    #expect(defaults.showOnLockScreen)
+    defaults.showOnLockScreen = false
+    #expect(!defaults.showOnLockScreen)
+}
+
 @Test func savedSettingsAreUsed() {
     let defaults = emptyDefaults()
     defaults.calculationMethod = .adhan(.ummAlQura)

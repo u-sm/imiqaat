@@ -69,6 +69,9 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         settings.keyEquivalent = ","
         menu.addItem(settings)
         menu.addItem(.separator())
+        if lockScreenAvailable {
+            menu.addItem(ActionItem("Show on Lock Screen", isOn: defaults.showOnLockScreen) { defaults.showOnLockScreen.toggle() })
+        }
         menu.addItem(ActionItem("Launch at Login", isOn: SMAppService.mainApp.status == .enabled) {
             Self.toggleLaunchAtLogin()
         })
