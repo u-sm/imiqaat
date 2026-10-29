@@ -46,6 +46,8 @@ jobs:
           # This version's changelog section, without its heading. It ends at the next
           # heading or at the link references (`[0.1.0]: …`) at the end of the file.
           awk -v v="${VERSION#v}" '$0 ~ "^## \\[" v "\\]" { on = 1; next } /^(## )?\[/ { on = 0 } on' CHANGELOG.md > notes.md
+          # A missing, mistyped or empty section leaves no notes: stop before publishing anything.
+          grep -q '[^[:space:]]' notes.md || { echo "::error::CHANGELOG.md has no notes for ${VERSION#v}"; exit 1; }
           cat >> notes.md <<'EOF'
 
           ## Installing
