@@ -91,10 +91,13 @@ To check a Lock Screen change, run the app, then lock the screen with **Control-
 
 ### Images
 
-The card images in `docs/images/` are rendered from the real view by the Artwork tool, with fixed sample data for Makkah and never your own location. After changing the card, regenerate them and commit the result:
+The project's images are rendered by the Artwork tool and committed, so normal builds don't need to run it. After changing a drawing, regenerate its images and commit the result:
 
 ```sh
-swift run Artwork screenshots docs/images
+swift run Artwork icon Resources          # Resources/AppIcon.icns, from Sources/Artwork/AppIcon.swift
+swift run Artwork screenshots docs/images # the card, with fixed sample data for Makkah
 ```
+
+Screenshots never use your own location. The menu-bar symbol is drawn in code (`Sources/WidgetUI/MenuBarSymbol.swift`), so it needs no image file.
 
 The Command Line Tools don't include SwiftUI's macro plugin, so `@State` and other SwiftUI macros won't compile. Keep view state in `ObservableObject` models so the project builds without Xcode.
