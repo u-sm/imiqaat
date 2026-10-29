@@ -25,3 +25,16 @@ import WidgetUI
     let tomorrow = try #require(schedule.times(on: makkahTime(2016, 2, 6, 12, 0)))
     try expect(21, 0, "Fajr", tomorrow.fajr, nil)
 }
+
+@Test func menuBarShowsTheTimeTheCountdownOrNothing() throws {
+    var schedule = makkah
+    schedule.iqamahTimes.khutbah = .fixed(hour: 12, minute: 45)
+    let now = makkahTime(2016, 2, 5, 12, 40)
+    let dhuhr = try #require(schedule.times(on: now)?.dhuhr)
+    #expect(schedule.menuBarTitle(at: makkahTime(2016, 2, 5, 12, 0)) == "Jumu'ah \(schedule.clock(dhuhr))")
+    // The countdown is the card's headline, so it counts down to the khutbah here too.
+    let countdown = try #require(schedule.menuBarTitle(at: now, style: .countdown))
+    #expect(countdown == schedule.headline(at: now))
+    #expect(countdown.hasPrefix("Khutbah in 5"), "\(countdown)")
+    #expect(schedule.menuBarTitle(at: now, style: .iconOnly) == nil)
+}

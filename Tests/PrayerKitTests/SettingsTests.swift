@@ -17,6 +17,13 @@ import Testing
     #expect(!defaults.showOnLockScreen)
 }
 
+@Test func menuBarShowsTheTimeUntilChanged() {
+    let defaults = emptyDefaults()
+    #expect(defaults.menuBarStyle == .time)
+    defaults.menuBarStyle = .countdown
+    #expect(defaults.menuBarStyle == .countdown)
+}
+
 @Test func savedSettingsAreUsed() {
     let defaults = emptyDefaults()
     defaults.calculationMethod = .adhan(.ummAlQura)

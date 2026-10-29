@@ -39,10 +39,10 @@ private struct PrayerTimesView: View {
     let now: Date
 
     var body: some View {
-        if let today = schedule.times(on: now), let headline = schedule.countdown(at: now) {
+        if let today = schedule.times(on: now), let countdown = schedule.countdown(at: now) {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(headline.label) in \(countdown(to: headline.time))")
+                    Text(schedule.headline(at: now) ?? "")
                         .font(.title2.bold())
                     Text(hijriDate)
                         .foregroundStyle(.secondary)
@@ -58,7 +58,7 @@ private struct PrayerTimesView: View {
                         .foregroundStyle(.secondary)
                     }
                     ForEach(Prayer.allCases, id: \.self) { prayer in
-                        let isNext = prayer == headline.row
+                        let isNext = prayer == countdown.row
                         HStack {
                             Text(schedule.name(of: prayer, on: now))
                             Spacer()
@@ -77,12 +77,6 @@ private struct PrayerTimesView: View {
         } else {
             Text("Prayer times can't be calculated here.")
         }
-    }
-
-    /// "1h 12m", rounded up to the minute so it never reads 0m before the prayer.
-    private func countdown(to time: Date) -> String {
-        let minutes = (time.timeIntervalSince(now) / 60).rounded(.up)
-        return Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: .narrow))
     }
 
     private var hijriDate: String {
@@ -118,8 +112,22 @@ extension PrayerSchedule {
         return (name(of: next.prayer, on: next.time), next.time, today.time(for: next.prayer) == next.time ? next.prayer : nil)
     }
 
-    /// The menu-bar item's text: the next prayer and its time, for example "Asr 15:55".
-    public func menuBarTitle(at date: Date) -> String? {
-        next(after: date).map { "\(name(of: $0.prayer, on: $0.time)) \(clock($0.time))" }
+    /// The card's headline, for example "Asr in 1h 12m": what `countdown(at:)` picks, with the
+    /// time left rounded up to the minute so it never reads 0m before the prayer.
+    public func headline(at date: Date) -> String? {
+        countdown(at: date).map { countdown in
+            let minutes = (countdown.time.timeIntervalSince(date) / 60).rounded(.up)
+            return "\(countdown.label) in \(Duration.seconds(minutes * 60).formatted(.units(allowed: [.hours, .minutes], width: .narrow)))"
+        }
+    }
+
+    /// The menu-bar item's text: the next prayer and its time ("Asr 15:55"), the card's
+    /// headline ("Asr in 1h 12m"), or nil for the icon only.
+    public func menuBarTitle(at date: Date, style: MenuBarStyle = .time) -> String? {
+        switch style {
+        case .time: next(after: date).map { "\(name(of: $0.prayer, on: $0.time)) \(clock($0.time))" }
+        case .countdown: headline(at: date)
+        case .iconOnly: nil
+        }
     }
 }
