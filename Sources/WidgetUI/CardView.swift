@@ -12,6 +12,8 @@ public struct CardView: View {
 
     let content: Content
     let style: CardStyle
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var contrast
 
     public init(_ content: Content, style: CardStyle = .full) {
         self.content = content
@@ -32,7 +34,25 @@ public struct CardView: View {
         .foregroundStyle(.white)
         .padding(20)
         .frame(width: 280, alignment: .leading)
-        .background(.black.opacity(0.45), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background { background }
+    }
+
+    /// Frosted glass over the wallpaper, like system widgets, or a solid dark card when the user
+    /// asks for less transparency or more contrast.
+    @ViewBuilder private var background: some View {
+        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
+        let solid = reduceTransparency || contrast == .increased
+        if #available(macOS 26, *), !solid {
+            // The faint fill keeps white text readable over bright wallpapers, and is what the
+            // Artwork tool's images show, since glass needs a real window behind it.
+            ZStack {
+                shape.fill(.black.opacity(0.2))
+                Color.clear.glassEffect(.regular, in: shape)
+            }
+        } else {
+            // shortcut: no blur before macOS 26; add an NSVisualEffectView if users there ask.
+            shape.fill(.black.opacity(solid ? 0.85 : 0.45))
+        }
     }
 }
 
