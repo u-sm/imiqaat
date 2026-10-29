@@ -28,7 +28,7 @@ let package = Package(
         ),
         .testTarget(
             name: "PrayerKitTests",
-            dependencies: ["PrayerKit", .product(name: "Adhan", package: "adhan-swift")]
+            dependencies: ["PrayerKit", "WidgetUI", .product(name: "Adhan", package: "adhan-swift")]
         ),
     ]
 )
