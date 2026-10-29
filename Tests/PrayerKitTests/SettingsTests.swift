@@ -34,3 +34,26 @@ import Testing
     #expect(defaults.calculationMethod == .jakim)
     #expect(defaults.calculationParameters.fajrAngle == 18)
 }
+
+@Test func noPrayerAdjustmentsByDefault() {
+    #expect(emptyDefaults().calculationParameters.adjustments == PrayerAdjustments())
+}
+
+@Test func prayerAdjustmentsMoveTheTimes() throws {
+    let defaults = emptyDefaults()
+    defaults.calculationMethod = .adhan(.ummAlQura)
+    let date = makkahTime(2016, 2, 4, 12, 0)
+    let before = try #require(PrayerSchedule(coordinates: makkah.coordinates, parameters: defaults.calculationParameters, timeZone: makkah.timeZone).times(on: date))
+    defaults.prayerAdjustments = PrayerAdjustments(asr: 5, isha: -3)
+    let after = try #require(PrayerSchedule(coordinates: makkah.coordinates, parameters: defaults.calculationParameters, timeZone: makkah.timeZone).times(on: date))
+    #expect(after.asr.timeIntervalSince(before.asr) == 5 * 60)
+    #expect(after.isha.timeIntervalSince(before.isha) == -3 * 60)
+    #expect(after.dhuhr == before.dhuhr)
+}
+
+@Test func prayerAdjustmentsAddToJakims() {
+    let defaults = emptyDefaults()
+    defaults.calculationMethod = .jakim
+    defaults.prayerAdjustments = PrayerAdjustments(dhuhr: 3)
+    #expect(defaults.calculationParameters.adjustments.dhuhr == PrayerMethod.jakim.params.adjustments.dhuhr + 3)
+}

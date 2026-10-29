@@ -45,6 +45,15 @@ private struct SettingsView: View {
     @ObservedObject var settings: Settings
 
     var body: some View {
+        TabView {
+            general.tabItem { Text("General") }
+            adjustments.tabItem { Text("Adjustments") }
+        }
+        .frame(width: 460)
+        .padding(.top, 8)
+    }
+
+    private var general: some View {
         Form {
             Picker("Calculation method", selection: settings.binding(\.calculationMethod)) {
                 ForEach(PrayerMethod.allCases, id: \.self) { Text($0.title).tag($0) }
@@ -58,6 +67,47 @@ private struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 460)
+    }
+
+    private var adjustments: some View {
+        Form {
+            Section {
+                ForEach(Prayer.allCases, id: \.self) { prayer in
+                    adjustment(for: prayer)
+                }
+            } footer: {
+                Text("Move a time earlier or later to match your mosque's timetable.")
+                    .foregroundColor(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    private func adjustment(for prayer: Prayer) -> some View {
+        let adjustments: ReferenceWritableKeyPath<UserDefaults, PrayerAdjustments> = \.prayerAdjustments
+        let minutes = settings.binding(adjustments.appending(path: prayer.adjustment))
+        return Stepper(value: minutes, in: -30...30) {
+            HStack {
+                Text(prayer.name)
+                Spacer()
+                Text(minutes.wrappedValue == 0 ? "None" : "\(minutes.wrappedValue > 0 ? "+" : "−")\(abs(minutes.wrappedValue)) min")
+                    .monospacedDigit()
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+}
+
+extension Prayer {
+    /// Where this prayer's offset lives in adhan-swift's adjustments.
+    var adjustment: WritableKeyPath<PrayerAdjustments, Int> {
+        switch self {
+        case .fajr: \.fajr
+        case .sunrise: \.sunrise
+        case .dhuhr: \.dhuhr
+        case .asr: \.asr
+        case .maghrib: \.maghrib
+        case .isha: \.isha
+        }
     }
 }
