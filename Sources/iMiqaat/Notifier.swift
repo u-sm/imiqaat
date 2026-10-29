@@ -20,13 +20,14 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     /// Call whenever the schedule or settings may have changed; it's cheap when nothing has.
     func update(_ schedule: PrayerSchedule?, reminders: Reminders) {
         guard let center else { return }
-        let alerts = schedule?.alerts(reminders, after: Date()) ?? []
-        guard alerts.map(\.id) != scheduled else { return }
-        scheduled = alerts.map(\.id)
+        let requests = schedule.map { schedule in schedule.alerts(reminders, after: Date()).map { request(for: $0, in: schedule) } } ?? []
+        // The text too, not only the IDs: an iqamah or clock-format change keeps the IDs.
+        let sent = requests.map { "\($0.identifier) \($0.content.title) \($0.content.body)" }
+        guard sent != scheduled else { return }
+        scheduled = sent
         sending?.cancel()
         center.removeAllPendingNotificationRequests()
-        guard let schedule, !alerts.isEmpty else { return }
-        let requests = alerts.map { request(for: $0, in: schedule) }
+        guard !requests.isEmpty else { return }
         sending = Task {
             // Asks the first time; afterwards it returns the user's choice without asking.
             guard (try? await center.requestAuthorization(options: [.alert, .sound])) == true else {
