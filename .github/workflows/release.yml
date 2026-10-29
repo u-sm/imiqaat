@@ -59,3 +59,22 @@ jobs:
           # shortcut: every release is a pre-release until builds are notarized (v1.0).
           gh release create "$VERSION" "iMiqaat-${VERSION#v}.dmg" \
             --title "iMiqaat ${VERSION#v}" --notes-file notes.md --prerelease
+
+      - name: Update the Homebrew cask
+        if: github.ref_type == 'tag'
+        env:
+          # A fine-grained token with Contents read/write on u-sm/homebrew-tap only.
+          TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          if [ -z "$TAP_TOKEN" ]; then
+            echo "::warning::HOMEBREW_TAP_TOKEN isn't set, so the Homebrew cask wasn't updated."
+            exit 0
+          fi
+          sha256=$(shasum -a 256 "iMiqaat-${VERSION#v}.dmg" | cut -d ' ' -f 1)
+          git clone --depth 1 "https://x-access-token:${TAP_TOKEN}@github.com/u-sm/homebrew-tap.git" tap
+          cd tap
+          sed -i '' -E "s/^  version \".*\"/  version \"${VERSION#v}\"/; s/^  sha256 \".*\"/  sha256 \"${sha256}\"/" Casks/imiqaat.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "imiqaat ${VERSION#v}"
+          git push

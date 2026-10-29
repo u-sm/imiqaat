@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - An app icon, and a matching symbol next to the next prayer in the menu bar.
 - A designed install window in the DMG, showing where to drag the app and how to open it the first time.
+- Install with Homebrew: `brew install --cask u-sm/tap/imiqaat`.
 - JAKIM (Malaysia) as a calculation method, matching the official e-Solat timetables to within a minute or two.
 
 ### Fixed
