@@ -5,17 +5,20 @@ import PrayerKit
 import ServiceManagement
 import WidgetUI
 
-/// The menu-bar item: the app's symbol with the next prayer and its time, and a menu of calculation settings.
+/// The menu-bar item: the app's symbol with the next prayer and its time, and a menu with the
+/// calculation method and the Settings window.
 @MainActor
 final class StatusMenu: NSObject, NSMenuDelegate {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let location: Location
     private let lockScreenAvailable: Bool
     private let settingsChanged: () -> Void
+    private let settingsWindow = SettingsWindow()
     private var timer: Timer?
     private var locationChanges: AnyCancellable?
+    private var settingChanges: AnyCancellable?
 
-    /// `settingsChanged` runs after the user picks a new setting.
+    /// `settingsChanged` runs after any setting changes, from the menu or the Settings window.
     init(location: Location, lockScreenAvailable: Bool, settingsChanged: @escaping () -> Void) {
         self.location = location
         self.lockScreenAvailable = lockScreenAvailable
@@ -38,6 +41,13 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         locationChanges = location.objectWillChange.receive(on: RunLoop.main).sink { [weak self] _ in
             MainActor.assumeIsolated { self?.updateTitle() }
         }
+        settingChanges = NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification, object: UserDefaults.standard)
+            .sink { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.updateTitle()
+                    self?.settingsChanged()
+                }
+            }
     }
 
     private func updateTitle() {
@@ -66,15 +76,13 @@ final class StatusMenu: NSObject, NSMenuDelegate {
             menu.addItem(withTitle: "Lock Screen widget unavailable on this macOS version", action: nil, keyEquivalent: "")
             menu.addItem(.separator())
         }
+        // Quick access to the method; the other settings are in the Settings window.
         menu.addItem(submenu("Calculation Method", PrayerMethod.allCases.map { method in
-            choice(method.title, isOn: defaults.calculationMethod == method) { defaults.calculationMethod = method }
+            ActionItem(method.title, isOn: defaults.calculationMethod == method) { defaults.calculationMethod = method }
         }))
-        menu.addItem(submenu("Asr Method", Madhab.allCases.map { madhab in
-            choice(madhab.title, isOn: defaults.madhab == madhab) { defaults.madhab = madhab }
-        }))
-        menu.addItem(submenu("High Latitudes", ([nil] + HighLatitudeRule.allCases).map { rule in
-            choice(rule?.title ?? "Automatic", isOn: defaults.highLatitudeRule == rule) { defaults.highLatitudeRule = rule }
-        }))
+        let settings = ActionItem("Settings…", isOn: false) { [weak self] in self?.settingsWindow.show() }
+        settings.keyEquivalent = ","
+        menu.addItem(settings)
         menu.addItem(.separator())
         menu.addItem(ActionItem("Launch at Login", isOn: SMAppService.mainApp.status == .enabled) {
             Self.toggleLaunchAtLogin()
@@ -102,14 +110,6 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         item.submenu = NSMenu()
         items.forEach(item.submenu!.addItem)
         return item
-    }
-
-    private func choice(_ title: String, isOn: Bool, save: @escaping () -> Void) -> NSMenuItem {
-        ActionItem(title, isOn: isOn) { [weak self] in
-            save()
-            self?.updateTitle()
-            self?.settingsChanged()
-        }
     }
 }
 

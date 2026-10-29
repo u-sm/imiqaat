@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- A Settings window, opened with **Settings…** (⌘,) in the menu, for the calculation method, the Asr method and the high-latitude rule. The menu keeps quick access to the calculation method.
+
 ## [0.5.0] - 2026-10-29
 
 The app gets its look: an icon, a designed install window, Homebrew and a website. It also adds JAKIM and fixes the location going stale.
