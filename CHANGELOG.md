@@ -6,11 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-29
+
+The app gets its look: an icon, a designed install window, Homebrew and a website. It also adds JAKIM and fixes the location going stale.
+
 ### Added
 
 - An app icon, and a matching symbol next to the next prayer in the menu bar.
 - A designed install window in the DMG, showing where to drag the app and how to open it the first time.
 - Install with Homebrew: `brew install --cask u-sm/tap/imiqaat`.
+- A website: <https://u-sm.github.io/imiqaat/>.
 - JAKIM (Malaysia) as a calculation method, matching the official e-Solat timetables to within a minute or two.
 
 ### Fixed
@@ -29,5 +34,6 @@ The first pre-release.
 - A Launch at Login option.
 - If a macOS update removes the private API the Lock Screen widget relies on, the app keeps working from the menu bar and says why the widget is missing.
 
-[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/u-sm/imiqaat/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/u-sm/imiqaat/compare/v0.1.0...v0.5.0
 [0.1.0]: https://github.com/u-sm/imiqaat/releases/tag/v0.1.0
