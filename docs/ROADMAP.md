@@ -79,7 +79,7 @@ v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0** and v0
 
 | Milestone | Issues | Why in this order |
 |---|---|---|
-| **v0.7 Reminders** | Notifications (#36) · adhan audio (#37) · pause media (#38) · tidy-ups for new contributors: location rule in one place (#77), submenu helper (#79) | Builds on accurate times and iqamah, so reminders fire at the right moments. |
+| **v0.7 Reminders** | Notifications (#36) · adhan audio (#37) · pause media (#38) · tidy-ups for new contributors: location rule in one place (#77), submenu helper (#79) · audit fixes: region in city search results (#85), a test for the countdown's order (#86), no release without a changelog section (#87) | Builds on accurate times and iqamah, so reminders fire at the right moments. |
 | **v0.8 Widget options** | Placement (#39) · compact card (#40) · glass style (#41) · hide on Lock Screen (#42) · menu-bar countdown (#43) · accessibility (#44) | Visual options, best designed once the card's content (iqamah, Jumu'ah) has settled. |
 | **v0.9 Islamic calendar** | Hijri adjustment (#32) · Sunnah times (#45) · forbidden times (#46) · Ramadan mode (#47) · upcoming Islamic dates (#48) | Depends on reminders (#36). The Hijri adjustment comes first, because Ramadan mode and Islamic dates use it. |
 | **v0.10 Languages** | Localization with Arabic (#49) · more languages (#50) | Last, so translators work on settled text instead of chasing changes. |
