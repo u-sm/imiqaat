@@ -6,14 +6,16 @@ public struct PrayerSchedule {
     public var coordinates: Coordinates
     public var parameters: CalculationParameters
     public var timeZone: TimeZone
+    public var iqamahTimes: IqamahTimes
 
-    public init(coordinates: Coordinates, parameters: CalculationParameters, timeZone: TimeZone) {
+    public init(coordinates: Coordinates, parameters: CalculationParameters, timeZone: TimeZone, iqamahTimes: IqamahTimes = IqamahTimes()) {
         self.coordinates = coordinates
         self.parameters = parameters
         self.timeZone = timeZone
+        self.iqamahTimes = iqamahTimes
     }
 
-    private var calendar: Calendar {
+    var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
         return calendar

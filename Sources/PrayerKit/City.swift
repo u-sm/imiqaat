@@ -26,8 +26,8 @@ extension UserDefaults {
     /// Mac's time zone. Nil when there's no city and no usable location.
     public func prayerSchedule(deviceCoordinates: Coordinates?) -> PrayerSchedule? {
         if let city {
-            return PrayerSchedule(coordinates: city.coordinates, parameters: calculationParameters, timeZone: city.timeZone)
+            return PrayerSchedule(coordinates: city.coordinates, parameters: calculationParameters, timeZone: city.timeZone, iqamahTimes: iqamahTimes)
         }
-        return deviceCoordinates.map { PrayerSchedule(coordinates: $0, parameters: calculationParameters, timeZone: .autoupdatingCurrent) }
+        return deviceCoordinates.map { PrayerSchedule(coordinates: $0, parameters: calculationParameters, timeZone: .autoupdatingCurrent, iqamahTimes: iqamahTimes) }
     }
 }
