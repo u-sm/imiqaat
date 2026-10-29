@@ -96,7 +96,7 @@ The project's images are rendered by the Artwork tool and committed, so normal b
 ```sh
 swift run Artwork dmg scripts/dmg         # the DMG window's background, laid out by scripts/dmg/settings.py
 swift run Artwork icon Resources          # Resources/AppIcon.icns, from Sources/Artwork/AppIcon.swift
-swift run Artwork screenshots docs/images # the card, with fixed sample data for Makkah
+swift run Artwork screenshots docs/images # the README's icon, Lock Screen and menu-bar images, and the card's states, with sample data for Makkah
 ```
 
 Screenshots never use your own location. The menu-bar symbol is drawn in code (`Sources/WidgetUI/MenuBarSymbol.swift`), so it needs no image file.
