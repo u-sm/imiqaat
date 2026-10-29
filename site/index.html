@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iMiqaat: Salah times on your Mac's Lock Screen</title>
+  <meta name="description" content="A free, open-source macOS app that shows today's prayer times on the Lock Screen. Calculated on your Mac; your location never leaves it.">
+  <link rel="icon" href="images/icon@2x.png">
+  <style>
+    :root {
+      --bg: #f7f5fb;
+      --text: #1b1a2e;
+      --muted: #5c5a73;
+      --card: #ffffff;
+      --accent: #332c6e;
+      --accent-text: #ffffff;
+      --border: #e3e0ee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #101326;
+        --text: #eceaf5;
+        --muted: #a8a5c0;
+        --card: #1b1f3b;
+        --accent: #ffd36e;
+        --accent-text: #101538;
+        --border: #2c3055;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 860px; margin: 0 auto; padding: 48px 16px 64px; }
+    header { text-align: center; }
+    h1 { font-size: 44px; margin: 12px 0 4px; letter-spacing: -0.5px; }
+    .tagline { font-size: 21px; color: var(--muted); margin: 0 0 28px; }
+    .download {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--accent-text);
+      font-weight: 600;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+    }
+    .requirements { color: var(--muted); font-size: 14px; margin-top: 10px; }
+    img { max-width: 100%; height: auto; }
+    .screenshot { display: block; margin: 40px auto 12px; border-radius: 14px; }
+    .menu-bar { display: block; margin: 0 auto; }
+    .caption { text-align: center; color: var(--muted); font-size: 13px; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px 24px 16px;
+      margin-top: 24px;
+    }
+    h2 { font-size: 22px; }
+    a { color: inherit; }
+    footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img src="images/icon@2x.png" width="128" height="128" alt="iMiqaat icon: the sun's path from dawn to night">
+      <h1>iMiqaat</h1>
+      <p class="tagline">Salah times on your Mac's Lock Screen.</p>
+      <a class="download" id="download" href="https://github.com/u-sm/imiqaat/releases">Download for Mac</a>
+      <p class="requirements">Free and open source. macOS 13 or later. Pre-release.</p>
+    </header>
+
+    <img class="screenshot" src="images/lock-screen@2x.png" width="800" height="500" alt="The iMiqaat card in the bottom-left corner of the Lock Screen, showing Asr in 1h 35m, the Hijri date and today's six times">
+    <img class="menu-bar" src="images/menu-bar@2x.png" width="116" height="40" alt="The menu-bar item: the sun-path symbol and Asr 15:55">
+    <p class="caption">Sample times for Makkah. The wallpaper is a stand-in.</p>
+
+    <section>
+      <h2>What it does</h2>
+      <ul>
+        <li>The next prayer, with a live countdown, right on the Lock Screen.</li>
+        <li>Today's times: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha, with the Hijri date.</li>
+        <li>Your choice of calculation method, including Umm al-Qura, ISNA and JAKIM, plus the Asr madhab and high-latitude rule.</li>
+        <li>Lives in the menu bar, with no Dock icon, and can start at login.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Privacy</h2>
+      <p>Prayer times are calculated on your Mac. iMiqaat uses your location only for that calculation and never sends it anywhere. It works offline.</p>
+    </section>
+
+    <section>
+      <h2>Installing</h2>
+      <p>Pre-releases aren't notarized by Apple yet, so macOS stops the app the first time you open it:</p>
+      <ol>
+        <li>Open the DMG and drag <strong>iMiqaat</strong> to <strong>Applications</strong>.</li>
+        <li>Open iMiqaat. When macOS says it can't verify the developer, click <strong>Done</strong>.</li>
+        <li>Open <strong>System Settings › Privacy &amp; Security</strong>, scroll down and click <strong>Open Anyway</strong> next to iMiqaat.</li>
+      </ol>
+    </section>
+
+    <footer>
+      <a href="https://github.com/u-sm/imiqaat">Source code on GitHub</a> · MIT License
+    </footer>
+  </main>
+  <script>
+    // Link straight to the newest release's DMG. GitHub's "latest release" skips
+    // pre-releases, so ask for the newest release of any kind; keep the Releases page
+    // link if the request fails.
+    fetch("https://api.github.com/repos/u-sm/imiqaat/releases?per_page=1")
+      .then((response) => response.json())
+      .then(([release]) => {
+        const dmg = release.assets.find((asset) => asset.name.endsWith(".dmg"));
+        if (dmg) {
+          const link = document.getElementById("download");
+          link.href = dmg.browser_download_url;
+          link.textContent = `Download iMiqaat ${release.tag_name.replace(/^v/, "")}`;
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
