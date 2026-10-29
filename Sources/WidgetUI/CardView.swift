@@ -40,22 +40,37 @@ private struct PrayerTimesView: View {
 
     var body: some View {
         if let today = schedule.times(on: now), let next = schedule.next(after: now) {
+            // Between an adhan and its iqamah, count down to the iqamah instead.
+            let pending = schedule.pendingIqamah(at: now)
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(next.prayer.name) in \(countdown(to: next.time))")
+                    Text(pending.map { "\($0.prayer.name) iqamah in \(countdown(to: $0.time))" } ?? "\(next.prayer.name) in \(countdown(to: next.time))")
                         .font(.title2.bold())
                     Text(hijriDate)
                         .foregroundStyle(.secondary)
                 }
                 VStack(spacing: 4) {
+                    if !schedule.iqamahTimes.isEmpty {
+                        HStack {
+                            Spacer()
+                            Text("Adhan")
+                            Text("Iqamah").frame(width: 56, alignment: .trailing)
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    }
                     ForEach(Prayer.allCases, id: \.self) { prayer in
                         // After Isha the next prayer is tomorrow's Fajr, so match on time, not name.
-                        let isNext = today.time(for: prayer) == next.time
+                        let isNext = pending.map { $0.prayer == prayer } ?? (today.time(for: prayer) == next.time)
                         HStack {
                             Text(prayer.name)
                             Spacer()
-                            // In the schedule's time zone, which is the Mac's in the app.
-                            Text(today.time(for: prayer).formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))
+                            Text(clock(today.time(for: prayer)))
+                            if !schedule.iqamahTimes.isEmpty {
+                                // The iqamah column, blank for prayers without one.
+                                Text(schedule.iqamah(for: prayer, on: now).map(clock) ?? "")
+                                    .frame(width: 56, alignment: .trailing)
+                            }
                         }
                         .fontWeight(isNext ? .bold : .regular)
                         .foregroundStyle(isNext ? .primary : .secondary)
@@ -65,6 +80,11 @@ private struct PrayerTimesView: View {
         } else {
             Text("Prayer times can't be calculated here.")
         }
+    }
+
+    /// In the schedule's time zone, which is the Mac's unless a city is chosen.
+    private func clock(_ time: Date) -> String {
+        time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone))
     }
 
     /// "1h 12m", rounded up to the minute so it never reads 0m before the prayer.

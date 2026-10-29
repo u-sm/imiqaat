@@ -79,7 +79,17 @@ default:
     let afternoon = calendar.date(from: DateComponents(year: 2026, month: 3, day: 1, hour: 14, minute: 20))!
 
     // shortcut: text follows the Mac's language and 12/24-hour setting; pin the locale when the card is localized (#49).
+    var withIqamah = makkah
+    withIqamah.iqamahTimes[.fajr] = .afterAdhan(minutes: 25)
+    withIqamah.iqamahTimes[.dhuhr] = .fixed(hour: 13, minute: 0)
+    withIqamah.iqamahTimes[.asr] = .afterAdhan(minutes: 20)
+    withIqamah.iqamahTimes[.maghrib] = .afterAdhan(minutes: 5)
+    withIqamah.iqamahTimes[.isha] = .afterAdhan(minutes: 15)
+    // Between Asr's adhan (15:55) and its iqamah (16:15).
+    let afterAsr = calendar.date(from: DateComponents(year: 2026, month: 3, day: 1, hour: 16, minute: 0))!
+
     let images: [(String, AnyView)] = [
+        ("card-iqamah", AnyView(CardView(.times(withIqamah, now: afterAsr)))),
         ("card", AnyView(CardView(.times(makkah, now: afternoon)))),
         ("card-finding-location", AnyView(CardView(.findingLocation))),
         ("card-location-denied", AnyView(CardView(.denied))),

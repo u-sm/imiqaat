@@ -62,6 +62,7 @@ private struct SettingsView: View {
         TabView {
             general.tabItem { Text("General") }
             adjustments.tabItem { Text("Adjustments") }
+            iqamah.tabItem { Text("Iqamah") }
         }
         // Grouped forms scroll, so they ask for no height; without one the window shrinks to the tab bar.
         .frame(width: 460, height: 460)
@@ -130,6 +131,83 @@ private struct SettingsView: View {
                     .monospacedDigit()
                     .foregroundColor(.secondary)
             }
+        }
+    }
+}
+
+private enum IqamahKind: Hashable {
+    case off, afterAdhan, fixed
+}
+
+extension SettingsView {
+    var iqamah: some View {
+        Form {
+            Section {
+                ForEach([Prayer.fajr, .dhuhr, .asr, .maghrib, .isha], id: \.self) { prayer in
+                    iqamahRows(for: prayer)
+                }
+            } footer: {
+                Text("A fixed time is skipped on days when it comes before the adhan.")
+                    .foregroundColor(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    @ViewBuilder
+    private func iqamahRows(for prayer: Prayer) -> some View {
+        let times: ReferenceWritableKeyPath<UserDefaults, IqamahTimes> = \.iqamahTimes
+        let setting = settings.binding(times.appending(path: \IqamahTimes.[prayer]))
+        // Today's schedule, from the chosen city or the last known location, to suggest and check times.
+        let schedule = settings.defaults.prayerSchedule(deviceCoordinates: settings.defaults.cachedCoordinates)
+        let adhan = schedule?.times(on: Date())?.time(for: prayer)
+        let kind = Binding<IqamahKind>(
+            get: {
+                switch setting.wrappedValue {
+                case nil: .off
+                case .afterAdhan: .afterAdhan
+                case .fixed: .fixed
+                }
+            },
+            set: { kind in
+                switch kind {
+                case .off: setting.wrappedValue = nil
+                case .afterAdhan: setting.wrappedValue = .afterAdhan(minutes: 15)
+                case .fixed:
+                    // Start from today's adhan rounded up to the quarter hour, so it's after the adhan.
+                    let start = adhan.map { Date(timeIntervalSinceReferenceDate: ($0.timeIntervalSinceReferenceDate / 900).rounded(.up) * 900) } ?? Date()
+                    var calendar = Calendar.current
+                    calendar.timeZone = schedule?.timeZone ?? .current
+                    let clock = calendar.dateComponents([.hour, .minute], from: start)
+                    setting.wrappedValue = .fixed(hour: clock.hour ?? 12, minute: clock.minute ?? 0)
+                }
+            }
+        )
+        Picker(prayer.name, selection: kind) {
+            Text("Off").tag(IqamahKind.off)
+            Text("After the adhan").tag(IqamahKind.afterAdhan)
+            Text("At a fixed time").tag(IqamahKind.fixed)
+        }
+        switch setting.wrappedValue {
+        case let .afterAdhan(minutes):
+            Stepper(value: Binding(get: { minutes }, set: { setting.wrappedValue = .afterAdhan(minutes: $0) }), in: 0...90, step: 5) {
+                Text("\(minutes) min after the adhan").foregroundColor(.secondary)
+            }
+        case let .fixed(hour, minute):
+            let time = Binding<Date>(
+                get: { Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: Date()) ?? Date() },
+                set: {
+                    let clock = Calendar.current.dateComponents([.hour, .minute], from: $0)
+                    setting.wrappedValue = .fixed(hour: clock.hour ?? hour, minute: clock.minute ?? minute)
+                }
+            )
+            DatePicker("Time", selection: time, displayedComponents: .hourAndMinute)
+            if adhan != nil, schedule?.iqamah(for: prayer, on: Date()) == nil {
+                Text("Today this is before the adhan, so it's skipped today.")
+                    .foregroundColor(.orange)
+            }
+        case nil:
+            EmptyView()
         }
     }
 }
