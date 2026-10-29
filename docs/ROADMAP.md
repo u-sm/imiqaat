@@ -70,14 +70,14 @@ Each milestone is a GitHub milestone, and each of its issues becomes one pull re
 | **v0.2 PrayerKit** | adhan-swift wrapper tested against Umm al-Qura's published timetable · CI · location cache |
 | **v0.3 Widget** | The Lock Screen card: next prayer, countdown, today's times, Hijri date, kept current every minute |
 | **v0.4 App** | Menu-bar item with calculation settings · Launch at Login · menu-bar-only fallback |
+| **v0.5 Identity** | Artwork tool · app icon and menu-bar symbol · DMG install window · README screenshots · website · Homebrew tap · release-notes fix · location kept current · JAKIM method |
 
-Released as the **0.1.0** pre-release.
+v0.0–v0.4 were released as the **0.1.0** pre-release, and v0.5 as **0.5.0**.
 
 ### Next
 
 | Milestone | Issues | Why in this order |
 |---|---|---|
-| **v0.5 Identity** | Artwork tool (#23) · app icon and menu-bar symbol (#24) · DMG install window (#25) · README screenshots (#26) · website (#27) · Homebrew tap (#28) · release-notes fix (#29) · keep the location current (#53) · JAKIM method (#59) | First impressions: everything later is easier to share once the app looks finished. The Artwork tool comes first because the icon, DMG and screenshots are all drawn by it. Two small changes ride along rather than wait for v0.6: the location fix, because 0.1.0 can show times for the wrong place, and the JAKIM method for Malaysia. |
 | **v0.6 Accurate times** | Settings window (#30) · per-prayer adjustments (#31) · Hijri adjustment (#32) · choose a city (#33) · iqamah times (#34) · Jumu'ah (#35) | Times that match the user's mosque are what make the app trustworthy. The Settings window comes first because the rest need number and time input. |
 | **v0.7 Reminders** | Notifications (#36) · adhan audio (#37) · pause media (#38) | Builds on accurate times and iqamah, so reminders fire at the right moments. |
 | **v0.8 Widget options** | Placement (#39) · compact card (#40) · glass style (#41) · hide on Lock Screen (#42) · menu-bar countdown (#43) · accessibility (#44) | Visual options, best designed once the card's content (iqamah, Jumu'ah) has settled. |
@@ -91,7 +91,7 @@ Released as the **0.1.0** pre-release.
 
 ## Releases
 
-- Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md). Milestone vX.Y ships as vX.Y.0, so the next release is 0.5.0.
+- Semantic version tags (`v0.1.0`), with GitHub Releases notes drawn from [CHANGELOG.md](../CHANGELOG.md). Milestone vX.Y ships as vX.Y.0, so the next release is 0.6.0.
 - Pushing a tag runs `.github/workflows/release.yml`, which builds a universal DMG and publishes it as a GitHub Release. Pull requests that change the pipeline get a dry run that builds the DMG without publishing.
 - Until v1.0, releases are ad-hoc signed pre-releases: macOS asks users to approve the app in Privacy & Security the first time they open it.
 - The Developer ID certificate and notarization key will be stored in GitHub Secrets only, and are added at v1.0.
