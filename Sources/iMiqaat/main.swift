@@ -12,7 +12,7 @@ app.setActivationPolicy(.accessory)
 let location = Location()
 
 let window = NSWindow(
-    contentRect: NSRect(x: 0, y: 0, width: 280, height: 320),
+    contentRect: .zero,
     styleMask: .borderless,
     backing: .buffered,
     defer: false
@@ -27,9 +27,15 @@ window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
 
 window.contentView = NSHostingView(rootView: LiveCardView(location: location, settings: Settings()))
 
-// shortcut: main display only, bottom-left corner; add placement settings when users ask.
-if let screen = NSScreen.main {
-    window.setFrameOrigin(NSPoint(x: screen.frame.minX + 48, y: screen.frame.minY + 48))
+// The window covers the screen, so the card can sit in any corner without resizing it, and
+// lets clicks through. Fitted again when displays change.
+// shortcut: main display only; follow the Lock Screen to other displays if users ask.
+@MainActor func fitToScreen() {
+    if let screen = NSScreen.main { window.setFrame(screen.frame, display: true) }
+}
+fitToScreen()
+NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { _ in
+    MainActor.assumeIsolated { fitToScreen() }
 }
 
 if let moveToLockScreen {

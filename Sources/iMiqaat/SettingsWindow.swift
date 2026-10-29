@@ -282,6 +282,13 @@ extension SettingsView {
                     Text("Compact: only what's next").tag(CardStyle.compact)
                 }
                 .pickerStyle(.radioGroup)
+                Picker("Position", selection: settings.binding(\.cardPosition)) {
+                    ForEach(CardPosition.allCases, id: \.self) { Text($0.title).tag($0) }
+                }
+                Picker("Margin", selection: settings.binding(\.cardMargin)) {
+                    ForEach(CardMargin.allCases, id: \.self) { Text("\($0)".capitalized).tag($0) }
+                }
+                .pickerStyle(.segmented)
             } footer: {
                 Text("Compact shows the next prayer's countdown and time, and the Hijri date.")
                     .foregroundColor(.secondary)
