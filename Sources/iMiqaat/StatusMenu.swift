@@ -12,17 +12,14 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let location: Location
     private let lockScreenAvailable: Bool
-    private let settingsChanged: () -> Void
     private let settingsWindow = SettingsWindow()
     private var timer: Timer?
     private var locationChanges: AnyCancellable?
     private var settingChanges: AnyCancellable?
 
-    /// `settingsChanged` runs after any setting changes, from the menu or the Settings window.
-    init(location: Location, lockScreenAvailable: Bool, settingsChanged: @escaping () -> Void) {
+    init(location: Location, lockScreenAvailable: Bool) {
         self.location = location
         self.lockScreenAvailable = lockScreenAvailable
-        self.settingsChanged = settingsChanged
         super.init()
         item.button?.image = menuBarSymbol
         item.button?.imagePosition = .imageLeading
@@ -41,30 +38,22 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         locationChanges = location.objectWillChange.receive(on: RunLoop.main).sink { [weak self] _ in
             MainActor.assumeIsolated { self?.updateTitle() }
         }
+        // Any settings change, from the menu or the Settings window.
         settingChanges = NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification, object: UserDefaults.standard)
-            .sink { [weak self] _ in
-                MainActor.assumeIsolated {
-                    self?.updateTitle()
-                    self?.settingsChanged()
-                }
-            }
+            .sink { [weak self] _ in MainActor.assumeIsolated { self?.updateTitle() } }
     }
 
     private func updateTitle() {
         guard
-            !location.isDenied,
-            let coordinates = location.coordinates,
-            let next = PrayerSchedule(
-                coordinates: coordinates,
-                parameters: UserDefaults.standard.calculationParameters,
-                timeZone: .autoupdatingCurrent
-            ).next(after: Date())
+            let schedule = UserDefaults.standard.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates),
+            let next = schedule.next(after: Date())
         else {
             // The symbol alone; its accessibility description names the app.
             item.button?.title = ""
             return
         }
-        item.button?.title = "\(next.prayer.name) \(next.time.formatted(date: .omitted, time: .shortened))"
+        // In the schedule's time zone, which is the chosen city's if there is one.
+        item.button?.title = "\(next.prayer.name) \(next.time.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: schedule.timeZone)))"
     }
 
     // Rebuilt on every open, so the ticks always match the saved settings.

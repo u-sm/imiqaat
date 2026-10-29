@@ -25,12 +25,7 @@ window.ignoresMouseEvents = true
 window.canBecomeVisibleWithoutLogin = true
 window.collectionBehavior = [.canJoinAllSpaces, .stationary, .ignoresCycle]
 
-@MainActor
-func card() -> LiveCardView {
-    LiveCardView(location: location, parameters: UserDefaults.standard.calculationParameters)
-}
-let cardView = NSHostingView(rootView: card())
-window.contentView = cardView
+window.contentView = NSHostingView(rootView: LiveCardView(location: location, settings: Settings()))
 
 // shortcut: main display only, bottom-left corner; add placement settings when users ask.
 if let screen = NSScreen.main {
@@ -54,6 +49,6 @@ for (name, alpha) in [("com.apple.screenIsLocked", 1.0), ("com.apple.screenIsUnl
     }
 }
 
-let statusMenu = StatusMenu(location: location, lockScreenAvailable: moveToLockScreen != nil) { cardView.rootView = card() }
+let statusMenu = StatusMenu(location: location, lockScreenAvailable: moveToLockScreen != nil)
 
 app.run()
