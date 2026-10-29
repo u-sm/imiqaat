@@ -31,13 +31,15 @@
 - 🕌 **The next prayer**, with a live countdown, right on the Lock Screen.
 - 📅 **Today's times**: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha, with your mosque's iqamah times if you add them, and Jumu'ah on Fridays.
 - 🔔 **Reminders** at the prayers you choose, at the adhan or a few minutes before, and before the iqamah.
+- 🪟 **A card your way**: frosted glass on macOS 26 and later, full or compact, larger text, in any corner of the Lock Screen, or hidden.
+- ⏱️ **A countdown in the menu bar**, or the next prayer's time, or just the icon.
 - 🌙 **The Hijri date**, from the Umm al-Qura calendar.
 - 🧭 **Your choice of calculation method, Asr madhab and high-latitude rule.**
 - 📍 **Your location or a city.** Use the Mac's location, or choose a city and see its times in its own time zone.
 - 📴 **Works offline.** Times are calculated on your Mac, and iMiqaat never sends your location anywhere. City search, if you use it, sends what you type to Apple Maps.
 - 🎛️ **Lives in the menu bar**, with no Dock icon, and can start at login.
 
-Coming next: widget styles, the adhan, Ramadan mode and Arabic. See the [roadmap](docs/ROADMAP.md).
+Coming next: the adhan, Ramadan mode and Islamic dates, and Arabic. See the [roadmap](docs/ROADMAP.md).
 
 ## How it works
 
