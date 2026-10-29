@@ -31,13 +31,20 @@ final class SettingsWindow {
 private final class CitySearch: ObservableObject {
     @Published var query = ""
     @Published private(set) var results: [City] = []
+    /// Shown when a search finds nothing, which is also what an offline search returns.
+    @Published private(set) var message: String?
+    private var search: Task<Void, Never>?
 
     func run() {
+        // A newer search replaces an older one, even if the older answer arrives last.
+        search?.cancel()
+        message = nil
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .address
-        Task {
+        search = Task {
             let items = (try? await MKLocalSearch(request: request).start())?.mapItems ?? []
+            guard !Task.isCancelled else { return }
             // A city without a time zone can't be shown in its own time, so leave it out.
             results = items.compactMap { item in
                 guard let timeZone = item.timeZone else { return nil }
@@ -45,12 +52,15 @@ private final class CitySearch: ObservableObject {
                 let name = [place.locality ?? item.name, place.country].compactMap { $0 }.joined(separator: ", ")
                 return City(name: name, coordinates: Coordinates(latitude: place.coordinate.latitude, longitude: place.coordinate.longitude), timeZone: timeZone)
             }
+            message = results.isEmpty ? "No cities found. Check the spelling or your connection." : nil
         }
     }
 
     func clear() {
+        search?.cancel()
         query = ""
         results = []
+        message = nil
     }
 }
 
@@ -83,6 +93,9 @@ private struct SettingsView: View {
                         settings.defaults.city = city
                         search.clear()
                     }
+                }
+                if let message = search.message {
+                    Text(message).foregroundColor(.secondary)
                 }
             } header: {
                 Text("Location")
