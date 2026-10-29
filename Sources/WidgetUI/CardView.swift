@@ -39,19 +39,11 @@ private struct PrayerTimesView: View {
     let now: Date
 
     var body: some View {
-        if let today = schedule.times(on: now), let next = schedule.next(after: now) {
-            // Between an adhan and its iqamah, count down to the iqamah instead, and on Fridays
-            // to the khutbah first.
-            let pending = schedule.pendingIqamah(at: now)
-            let khutbah = schedule.khutbah(on: now).flatMap { today.dhuhr <= now && now < $0 ? $0 : nil }
+        if let today = schedule.times(on: now), let headline = schedule.countdown(at: now) {
             VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(
-                        khutbah.map { "Khutbah in \(countdown(to: $0))" }
-                            ?? pending.map { "\(schedule.name(of: $0.prayer, on: now)) iqamah in \(countdown(to: $0.time))" }
-                            ?? "\(schedule.name(of: next.prayer, on: next.time)) in \(countdown(to: next.time))"
-                    )
-                    .font(.title2.bold())
+                    Text("\(headline.label) in \(countdown(to: headline.time))")
+                        .font(.title2.bold())
                     Text(hijriDate)
                         .foregroundStyle(.secondary)
                 }
@@ -66,8 +58,7 @@ private struct PrayerTimesView: View {
                         .foregroundStyle(.secondary)
                     }
                     ForEach(Prayer.allCases, id: \.self) { prayer in
-                        // After Isha the next prayer is tomorrow's Fajr, so match on time, not name.
-                        let isNext = khutbah != nil ? prayer == .dhuhr : pending.map { $0.prayer == prayer } ?? (today.time(for: prayer) == next.time)
+                        let isNext = prayer == headline.row
                         HStack {
                             Text(schedule.name(of: prayer, on: now))
                             Spacer()
@@ -111,6 +102,20 @@ extension PrayerSchedule {
     /// The prayer's name on the day containing `date`: Dhuhr is Jumu'ah on Fridays.
     public func name(of prayer: Prayer, on date: Date) -> String {
         isJumuah(prayer, on: date) ? "Jumu'ah" : prayer.name
+    }
+
+    /// What the card counts down to at `date`. On Fridays between the adhan and the khutbah,
+    /// the khutbah; between an adhan and its iqamah, the iqamah; otherwise the next adhan.
+    /// `row` is today's prayer to highlight: nil after Isha, when the next is tomorrow's Fajr.
+    public func countdown(at date: Date) -> (label: String, time: Date, row: Prayer?)? {
+        guard let today = times(on: date), let next = next(after: date) else { return nil }
+        if let khutbah = khutbah(on: date), today.dhuhr <= date, date < khutbah {
+            return ("Khutbah", khutbah, .dhuhr)
+        }
+        if let pending = pendingIqamah(at: date) {
+            return ("\(name(of: pending.prayer, on: date)) iqamah", pending.time, pending.prayer)
+        }
+        return (name(of: next.prayer, on: next.time), next.time, today.time(for: next.prayer) == next.time ? next.prayer : nil)
     }
 
     /// The menu-bar item's text: the next prayer and its time, for example "Asr 15:55".
