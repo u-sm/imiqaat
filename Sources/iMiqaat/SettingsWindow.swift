@@ -359,8 +359,9 @@ extension SettingsView {
                     reminderPicker(prayer.name, path.appending(path: \Reminders.[prayer]), minutes: [0, 5, 10, 15, 30], atTime: prayer == .sunrise ? "At sunrise" : "At the adhan")
                 }
                 reminderPicker("Before the iqamah", path.appending(path: \.beforeIqamah), minutes: [5, 10, 15])
+                Toggle("Play the adhan", isOn: settings.binding(\.playsAdhan))
             } footer: {
-                Text("The iqamah reminder is for prayers with an iqamah time. iMiqaat asks to send notifications the first time you turn one on; if you said no, allow them in System Settings › Notifications.")
+                Text("The iqamah reminder is for prayers with an iqamah time. The adhan plays with reminders set to At the adhan, even during Focus. iMiqaat asks to send notifications the first time you turn one on; if you said no, allow them in System Settings › Notifications.")
                     .foregroundColor(.secondary)
             }
         }

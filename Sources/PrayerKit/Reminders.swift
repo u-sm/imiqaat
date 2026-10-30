@@ -39,6 +39,9 @@ public struct PrayerAlert: Equatable {
     /// When to notify: `time`, or some minutes before it.
     public var date: Date
 
+    /// True for the reminder at the adhan itself, not before it, and not at sunrise, which has no adhan.
+    public var isAtAdhan: Bool { !isIqamah && date == time && prayer != .sunrise }
+
     /// Stable for the same reminder, so an unchanged schedule needn't be sent again.
     public var id: String { "\(prayer)-\(isIqamah ? "iqamah" : "adhan")-\(Int(date.timeIntervalSince1970))" }
 }

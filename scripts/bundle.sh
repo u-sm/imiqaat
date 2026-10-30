@@ -16,6 +16,8 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$bin/iMiqaat" "$app/Contents/MacOS/"
 # Rendered by `swift run Artwork icon Resources`.
 cp Resources/AppIcon.icns "$app/Contents/Resources/"
+# Part of the adhan, cut from Beautiful adhan.ogg (CC0); see THIRD_PARTY_NOTICES.md.
+cp Resources/adhan.aiff "$app/Contents/Resources/"
 cat > "$app/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

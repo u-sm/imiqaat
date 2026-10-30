@@ -55,3 +55,16 @@ import Testing
     #expect(first.date == schedule.iqamah(for: .asr, on: makkahTime(2016, 2, 4, 12, 0))?.addingTimeInterval(-5 * 60))
     #expect(alerts.allSatisfy { $0.isIqamah && $0.prayer == .asr })
 }
+
+@Test func onlyRemindersAtTheAdhanPlayIt() {
+    var reminders = Reminders()
+    reminders[.sunrise] = 0
+    reminders[.dhuhr] = 0
+    reminders[.asr] = 10
+    reminders.beforeIqamah = 5
+    var schedule = makkah
+    schedule.iqamahTimes[.dhuhr] = .afterAdhan(minutes: 15)
+    // Two days from 03:00: two Dhuhrs. Not sunrise, Asr ten minutes before, or the iqamah.
+    let atAdhan = schedule.alerts(reminders, after: makkahTime(2016, 2, 4, 3, 0)).filter(\.isAtAdhan).map(\.prayer)
+    #expect(atAdhan == [.dhuhr, .dhuhr])
+}

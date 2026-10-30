@@ -102,3 +102,10 @@ import Testing
     defaults.prayerAdjustments = PrayerAdjustments(dhuhr: 3)
     #expect(defaults.calculationParameters.adjustments.dhuhr == PrayerMethod.jakim.params.adjustments.dhuhr + 3)
 }
+
+@Test func adhanSoundIsOffUntilTurnedOn() {
+    let defaults = emptyDefaults()
+    #expect(!defaults.playsAdhan)
+    defaults.playsAdhan = true
+    #expect(defaults.playsAdhan)
+}

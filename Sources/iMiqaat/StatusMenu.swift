@@ -49,7 +49,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         let schedule = defaults.prayerSchedule(deviceCoordinates: location.isDenied ? nil : location.coordinates)
         // Without times, the symbol alone; its accessibility description names the app.
         item.button?.title = schedule?.menuBarTitle(at: Date(), style: defaults.menuBarStyle) ?? ""
-        notifier.update(schedule, reminders: defaults.reminders)
+        notifier.update(schedule, reminders: defaults.reminders, playsAdhan: defaults.playsAdhan)
     }
 
     // Rebuilt on every open, so the ticks always match the saved settings.

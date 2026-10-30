@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 import PrayerKit
 import UserNotifications
 import WidgetUI
@@ -11,6 +11,9 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     private let center = Bundle.main.bundleIdentifier == nil ? nil : UNUserNotificationCenter.current()
     private var scheduled: [String] = []
     private var sending: Task<Void, Never>?
+    // Resources/adhan.aiff, part of the adhan. macOS plays only its own tones as notification sounds, so the app plays it.
+    private let adhan = NSSound(named: "adhan")
+    private var playedAdhan: String?
 
     override init() {
         super.init()
@@ -18,13 +21,20 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     }
 
     /// Call whenever the schedule or settings may have changed; it's cheap when nothing has.
-    func update(_ schedule: PrayerSchedule?, reminders: Reminders) {
+    func update(_ schedule: PrayerSchedule?, reminders: Reminders, playsAdhan: Bool) {
         guard let center else { return }
         // From a minute ago: at a reminder's own minute it's still listed, so the list doesn't change and
         // nothing is removed while macOS is delivering it.
-        let requests = schedule.map { schedule in schedule.alerts(reminders, after: Date().addingTimeInterval(-60)).map { request(for: $0, in: schedule) } } ?? []
-        // The text too, not only the IDs: an iqamah or clock-format change keeps the IDs.
-        let sent = requests.map { "\($0.identifier) \($0.content.title) \($0.content.body)" }
+        let now = Date()
+        let alerts = schedule?.alerts(reminders, after: now.addingTimeInterval(-60)) ?? []
+        // Called at the start of every minute. Only within the adhan's minute, so it never plays late after the Mac wakes.
+        if playsAdhan, let due = alerts.first(where: { $0.isAtAdhan && $0.date <= now }), due.id != playedAdhan {
+            playedAdhan = due.id
+            adhan?.play()
+        }
+        let requests = schedule.map { schedule in alerts.map { request(for: $0, in: schedule, playsAdhan: playsAdhan) } } ?? []
+        // The text and sound too, not only the IDs: an iqamah, clock-format or sound change keeps the IDs.
+        let sent = requests.map { "\($0.identifier) \($0.content.title) \($0.content.body) \(playsAdhan)" }
         guard sent != scheduled else { return }
         scheduled = sent
         sending?.cancel()
@@ -43,14 +53,15 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
-    private func request(for alert: PrayerAlert, in schedule: PrayerSchedule) -> UNNotificationRequest {
+    private func request(for alert: PrayerAlert, in schedule: PrayerSchedule, playsAdhan: Bool) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         let name = schedule.name(of: alert.prayer, on: alert.time)
         content.title = "\(name)\(alert.isIqamah ? " iqamah" : "") — \(schedule.clock(alert.time))"
         if !alert.isIqamah, let iqamah = schedule.iqamah(for: alert.prayer, on: alert.time) {
             content.body = "Iqamah \(schedule.clock(iqamah))"
         }
-        content.sound = .default
+        // Silent when the app plays the adhan, so the chime doesn't play over it.
+        content.sound = playsAdhan && alert.isAtAdhan ? nil : .default
         // A fixed moment, so a change of the Mac's time zone doesn't move it.
         let moment = Calendar(identifier: .gregorian).dateComponents(in: .gmt, from: alert.date)
         return UNNotificationRequest(identifier: alert.id, content: content, trigger: UNCalendarNotificationTrigger(dateMatching: moment, repeats: false))

@@ -30,7 +30,7 @@
 
 - 🕌 **The next prayer**, with a live countdown, right on the Lock Screen, and over the screen saver once your Mac locks.
 - 📅 **Today's times**: Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha, with your mosque's iqamah times if you add them, and Jumu'ah on Fridays.
-- 🔔 **Reminders** at the prayers you choose, at the adhan or a few minutes before, and before the iqamah.
+- 🔔 **Reminders** at the prayers you choose, at the adhan or a few minutes before, and before the iqamah, with the adhan if you like.
 - 🪟 **A card your way**: frosted glass on macOS 26 and later, full or compact, larger text, in any corner or centered on the Lock Screen, or hidden.
 - ⏱️ **A countdown in the menu bar**, or the next prayer's time, or just the icon.
 - 📆 **The Hijri date and what's coming**: the Umm al-Qura date on the card, and the next Ramadan, Eids, Day of Arafah, Islamic New Year and Ashura in the menu.
@@ -41,7 +41,7 @@
 - 📴 **Works offline.** Times are calculated on your Mac, and iMiqaat never sends your location anywhere. City search, if you use it, sends what you type to Apple Maps.
 - 🎛️ **Lives in the menu bar**, with no Dock icon, and can start at login.
 
-Coming next: Arabic and more languages, a Hijri date adjustment for local moon sighting, and the adhan. See the [roadmap](docs/ROADMAP.md).
+Coming next: Arabic and more languages, and a Hijri date adjustment for local moon sighting. See the [roadmap](docs/ROADMAP.md).
 
 ## How it works
 
@@ -104,6 +104,7 @@ To report a security issue, follow [SECURITY.md](SECURITY.md) and do not open a 
 
 - [SkyLightWindow](https://github.com/Lakr233/SkyLightWindow) by Lakr Aream (MIT), for the Lock Screen window technique, adapted in `Sources/iMiqaat/SkyLight.swift`.
 - [adhan-swift](https://github.com/batoulapps/adhan-swift) by Batoul Apps (MIT), for prayer-time calculation.
+- The adhan recording is cut from [Beautiful adhan.ogg](https://commons.wikimedia.org/wiki/File:Beautiful_adhan.ogg) by Adam-synagda (CC0); see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## License
 

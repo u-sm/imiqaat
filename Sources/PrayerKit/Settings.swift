@@ -105,6 +105,12 @@ extension UserDefaults {
         set { set(newValue, forKey: "showSunnahTimes") }
     }
 
+    /// Whether reminders at the adhan play a short adhan recording instead of the default sound. Off by default.
+    public var playsAdhan: Bool {
+        get { bool(forKey: "playsAdhan") }
+        set { set(newValue, forKey: "playsAdhan") }
+    }
+
     /// Whether the card counts down to iftar and the end of suhoor during Ramadan. Defaults to true.
     public var ramadanMode: Bool {
         get { object(forKey: "ramadanMode") as? Bool ?? true }
