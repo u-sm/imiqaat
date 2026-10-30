@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- The adhan at prayer time: a short part of the adhan, "Hayya 'ala as-salah" ("come to prayer"), plays with reminders set to **At the adhan**. Turn it on with **Play the adhan** on the Reminders tab of Settings. It plays on the Lock Screen too, even during Focus, and not late after the Mac wakes.
+
 ## [0.9.0] - 2026-10-30
 
 The Islamic calendar: Ramadan mode, upcoming Islamic dates, the night prayer times and the times when voluntary prayer is discouraged, and the card centered on the Lock Screen.

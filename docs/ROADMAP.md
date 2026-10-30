@@ -83,7 +83,7 @@ v0.0–v0.4 were released as the **0.1.0** pre-release, v0.5 as **0.5.0**, v0.6 
 
 | Milestone | Issues | Why in this order |
 |---|---|---|
-| **v0.10 Languages** | Localization with Arabic (#49) · more languages (#50) · moved from v0.9: Hijri adjustment (#32), adhan audio (#37), pause media (#38), and the location-rule tidy-up (#77) | Translators work on settled text instead of chasing changes. #32 and #77 are left for new contributors; Ramadan mode and Islamic dates follow the Hijri adjustment once it lands. #37 waits on choosing a recording with a clear licence, and #38 builds on it. |
+| **v0.10 Languages** | Localization with Arabic (#49) · more languages (#50) · moved from v0.9: Hijri adjustment (#32), adhan audio (#37, done), pause media (#38), and the location-rule tidy-up (#77) | Translators work on settled text instead of chasing changes. #32 and #77 are left for new contributors; Ramadan mode and Islamic dates follow the Hijri adjustment once it lands. #37 plays a CC0 recording from the app itself, since macOS ignores custom notification sounds; #38 waits until someone asks for it. |
 | **v1.0 Release** | Developer ID signing and notarization | Waiting on an Apple Developer account. Sparkle auto-updates follow it, because updates need a stable signing identity. |
 
 ### Later
