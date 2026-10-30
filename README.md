@@ -80,8 +80,13 @@ Or download the DMG from the latest release on the [Releases](https://github.com
 Pre-releases are ad-hoc signed and not notarized by Apple, so macOS stops the app the first time you open it:
 
 1. Open the DMG and drag **iMiqaat** to **Applications** (Homebrew does this for you).
+
+   ![Dragging iMiqaat from the DMG into Applications](docs/images/install-drag.gif)
+
 2. Open iMiqaat. When macOS says it can't verify the developer, click **Done**.
 3. Open **System Settings › Privacy & Security**, scroll down and click **Open Anyway** next to iMiqaat.
+
+   ![Opening iMiqaat the first time: Done on the warning, then Open Anyway in Privacy & Security](docs/images/install-open-anyway.gif)
 
 Notarized releases, which open without these steps, are planned for v1.0.
 
