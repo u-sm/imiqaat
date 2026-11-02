@@ -19,6 +19,7 @@ public struct CardView: View {
     let imsakMinutes: Int
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.colorScheme) private var colorScheme
 
     public init(_ content: Content, style: CardStyle = .full, textSize: CardTextSize = .standard, showSunnahTimes: Bool = false, discouragedTimes: DiscouragedTimes? = nil, ramadanMode: Bool = true, imsakMinutes: Int = 0) {
         self.content = content
@@ -46,27 +47,30 @@ public struct CardView: View {
             }
         }
         .font(scaled(.body, 13, by: scale))
-        .foregroundStyle(.white)
+        .foregroundStyle(isDark ? .white : .black)
         .padding(20 * scale)
         .frame(width: 280 * scale, alignment: .leading)
         .background { background }
     }
 
-    /// Frosted glass over the wallpaper, like system widgets, or a solid dark card when the user
-    /// asks for less transparency or more contrast.
+    private var isDark: Bool { colorScheme == .dark }
+
+    /// Frosted glass over the wallpaper, like system widgets, or a solid card when the user asks
+    /// for less transparency or more contrast. Dark or light with the system, since the glass is.
     @ViewBuilder private var background: some View {
         let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
         let solid = reduceTransparency || contrast == .increased
+        let tint: Color = isDark ? .black : .white
         if #available(macOS 26, *), !solid {
-            // The faint fill keeps white text readable over bright wallpapers, and is what the
-            // Artwork tool's images show, since glass needs a real window behind it.
+            // The faint fill keeps the text readable over wallpapers of the opposite brightness,
+            // and is what the Artwork tool's images show, since glass needs a real window behind it.
             ZStack {
-                shape.fill(.black.opacity(0.2))
+                shape.fill(tint.opacity(isDark ? 0.2 : 0.35))
                 Color.clear.glassEffect(.regular, in: shape)
             }
         } else {
             // shortcut: no blur before macOS 26; add an NSVisualEffectView if users there ask.
-            shape.fill(.black.opacity(solid ? 0.85 : 0.45))
+            shape.fill(tint.opacity(solid ? 0.85 : isDark ? 0.45 : 0.6))
         }
     }
 }
