@@ -22,7 +22,8 @@ func fail(_ message: String) -> Never {
 /// Writes `view` as a PNG, at `scale` pixels per point.
 @MainActor
 func render(_ view: some View, to url: URL, scale: CGFloat) {
-    let renderer = ImageRenderer(content: view)
+    // The README shows the dark card, which suits the stand-in night wallpaper.
+    let renderer = ImageRenderer(content: view.environment(\.colorScheme, .dark))
     renderer.scale = scale
     guard
         let image = renderer.cgImage,
